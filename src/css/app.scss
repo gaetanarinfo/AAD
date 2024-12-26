@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap');
+
+// App
+
+.loadings {
+    min-height: 100vh;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@media all and (max-width: 768px) {
+
+    .loadings {
+        align-items: center;
+        text-align: center;
+        position: fixed;
+        margin-left: auto;
+        z-index: 1000;
+        width: 100%;
+        height: 100vh;
+        min-height: 100vh;
+    }
+
+}
+
+.loadings img {
+    display: block;
+    width: 100%;
+    max-width: 150px;
+}
+
+// Menu
+.q-item__section--avatar {
+    min-width: 0;
+}
+
+.q-drawer--left .q-item__label {
+    font-family: "Heebo", sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.q-drawer--left .title-menu {
+    font-size: 14px;
+}
+
+.q-drawer--left .icon-header,
+.q-drawer--left .q-btn .q-icon {
+    font-size: 26px;
+    min-height: 26px;
+    min-width: 26px;
+}
+
+.q-drawer--left .q-item__label--header {
+    color: #2a2a2a;
+}
+
+.q-drawer--left .q-item__section--side>.q-icon {
+    font-size: 21px;
+}
+
+.q-drawer--left .q-item__label.q-item__label--header {
+    display: flex;
+    align-items: center;
+}
+
+.q-drawer--left .version {
+    font-family: "Heebo", sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.close-menu {
+    margin-right: 0;
+}
+
+// Home
+
+.title {
+    color: #27a4dc;
+    position: relative;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.wrapper .line {
+    border-top: 1px solid #27a4dc;
+    flex-grow: 1;
+    margin: 0 10px;
+}
+
+.q-stepper__tab {
+    padding: 0 !important;
+}
+
+#loader {
+    margin-top: -8rem;
+}
+
+// Footer Menu
+
+.q-footer-layout {
+    font-family: "Heebo", sans-serif;
+    color: inherit;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+// Others Style
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    font-family: "Heebo", sans-serif;
+}
+
+@media all and (max-width: 768px) {
+
+    h1 {
+        font-size: 18px;
+        line-height: normal;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    p {
+        font-size: 18px;
+        line-height: normal;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+
+}
+
+.q-item__section--main {
+    font-family: "Heebo", sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.q-stepper__content.q-panel-parent {
+    display: none;
+}
+
+.q-stepper {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.q-stepper__header--border {
+    border: none;
+}
+
+.hide {
+    display: none;
+}
+
+.disabled {
+    opacity: 0.2 !important;
+    pointer-events: none;
+}
