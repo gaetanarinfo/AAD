@@ -181,3 +181,10 @@ p {
     opacity: 0.2 !important;
     pointer-events: none;
 }
+
+.text-white .text-light-blue-9,
+.text-white .q-item__label--caption {
+    color: #fff !important;
+}
+
+// Animations

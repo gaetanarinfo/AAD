@@ -48,6 +48,7 @@ export default defineConfig((ctx) => {
           : 'https://prod.gaetan-seigneur.fr',
         VERSION: '1.0.0',
         API_KEY_GOUV: '3d8c02bc-fd40-4dda-8c02-bcfd409ddad3',
+        API_KEY_GEOAPIFY: '3d402659d7fa4467afc56ba618d49e43'
       },
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,

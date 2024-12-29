@@ -5,23 +5,39 @@
 
       <q-toolbar class="glossy bg-light-blue-9">
 
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <transition appear enter-active-class="animated jackInTheBox slower" leave-active-class="animated jackInTheBox">
+          <q-btn flat v-ripple dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        </transition>
 
         <q-space />
 
-        <q-btn flat dense round class="q-mr-md" icon="notifications" aria-label="Notifications">
-          <q-badge color="red" text-color="white" floating>
-            0
-          </q-badge>
-          <q-tooltip>Notifications</q-tooltip>
-        </q-btn>
+        <transition appear enter-active-class="animated jackInTheBox slower" leave-active-class="animated jackInTheBox">
 
-        <q-btn flat dense class="q-mr-xs" round aria-label="Espace utilisateur">
-          <q-avatar size="26px">
-            <img src="~assets/utilisateur.png">
-          </q-avatar>
-          <q-tooltip>Espace utilisateur</q-tooltip>
-        </q-btn>
+          <q-btn :disabled="notifications.length === 0 || !isLoggedIn" v-ripple flat dense round class="q-mr-md"
+            icon="notifications"
+            @click="!notificationsDialog && notifications.length >= 1 ? notificationsDialog = true : notificationsDialog = false"
+            aria-label="Notifications">
+
+            <q-badge v-if="isLoggedIn && notifications.length >= 1" color="red" text-color="white" floating>
+              {{ notifications.length }}
+            </q-badge>
+
+          </q-btn>
+
+        </transition>
+
+        <transition appear enter-active-class="animated jackInTheBox slower" leave-active-class="animated jackInTheBox">
+
+          <q-btn :disabled="!isLoggedIn" flat dense v-ripple class="q-mr-xs" round aria-label="Espace utilisateur">
+            <q-avatar size="26px">
+              <q-img spinner-color="light-blue-9" spinner-size="15px" v-if="photo_profil === ''"
+                src="~assets/utilisateur.png" />
+              <q-img spinner-color="light-blue-9" style="min-width: 26px; max-width: 26px;" spinner-size="15px" v-else
+                :src="photo_profil" />
+            </q-avatar>
+          </q-btn>
+
+        </transition>
 
       </q-toolbar>
 
@@ -113,20 +129,73 @@
       <router-view />
     </q-page-container>
   </q-layout>
+
+  <q-dialog v-if="isLoggedIn" v-model="notificationsDialog" position="bottom">
+
+    <q-card>
+
+      <q-toolbar>
+
+        <q-item-section style="max-width: 32px;">
+          <q-icon name="notifications" color="light-blue-9" size="md" />
+        </q-item-section>
+
+        <q-toolbar-title style="text-transform: uppercase; font-weight: 600;">Notifications</q-toolbar-title>
+
+        <q-btn flat round v-ripple dense icon="done_all" @click="checkNotificationAll" v-close-popup />
+      </q-toolbar>
+
+
+      <q-list bordered separator>
+
+        <q-item v-for="notification in notifications">
+
+          <q-item-section style="max-width: 35px;margin-right: 16px;">
+            <q-img src="~assets/logo.png" color="light-blue-9" style="max-width: 35px;" />
+          </q-item-section>
+
+          <q-item-section>
+            {{ notification.name }}<br />
+            <span style="font-weight: normal; text-transform: initial;">{{ notification.content }}</span>
+          </q-item-section>
+
+          <q-item-section avatar>
+            <q-btn icon="check" @click="checkNotification(notification.id)" color="green-9" size="sm" flat dense rounded
+              v-ripple />
+          </q-item-section>
+
+        </q-item>
+
+        <q-separator />
+
+      </q-list>
+
+    </q-card>
+
+  </q-dialog>
+
 </template>
 
 <script>
 import { ref } from 'vue'
 import MenuComponent from 'src/components/Menu.vue'
 import SettingsComponent from 'src/components/Settings.vue'
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, computed } from 'vue'
+import { useUserStore } from 'stores/user'
 import moment from 'moment'
+import { storeToRefs } from 'pinia'
+import axios from 'axios'
+import { useQuasar } from 'quasar'
 
 moment.locale('fr')
 
 const leftDrawerOpen = ref(false),
   leftDrawerOpenSettings = ref(false),
-  connexionState = ref(true)
+  connexionState = ref(true),
+  notifications = ref([]),
+  user = ref([]),
+  notificationsDialog = ref(false),
+  photo_profil = ref('')
 
 export default defineComponent({
   name: 'MainLayout',
@@ -136,7 +205,251 @@ export default defineComponent({
   },
   setup () {
 
+    const userStore = useUserStore()
+    const { isLoggedIn } = storeToRefs(userStore)
+    const $q = useQuasar()
+
+    if (connexionState.value && isLoggedIn.value) {
+
+      axios.get(process.env.API + '/api/user/notifications/' + userStore.stateUser.user.email).then(res => {
+
+        if (res.data.succes) {
+
+          notifications.value = res.data.notifications
+
+        } else {
+
+          $q.notify({
+            timeout: 1000,
+            color: 'red-5',
+            textColor: 'white',
+
+            icon: 'warning',
+            message: res.data.message,
+            progress: true,
+            classes: 'glossy',
+          })
+
+        }
+
+      }).catch(error => {
+
+        $q.notify({
+          timeout: 1000,
+          color: 'red-5',
+          textColor: 'white',
+
+          icon: 'warning',
+          message: 'une erreur est survenue !',
+          progress: true,
+          classes: 'glossy',
+        })
+
+      })
+
+      photo_profil.value = userStore.stateUser.user.photo
+
+      setInterval(() => {
+
+        axios.get(process.env.API + '/api/user/notifications/' + userStore.stateUser.user.email).then(res => {
+
+          if (res.data.succes) {
+
+            notifications.value = res.data.notifications
+
+          } else {
+
+            $q.notify({
+              timeout: 1000,
+              color: 'red-5',
+              textColor: 'white',
+
+              icon: 'warning',
+              message: res.data.message,
+              progress: true,
+              classes: 'glossy',
+            })
+
+          }
+
+        }).catch(error => {
+
+          $q.notify({
+            timeout: 1000,
+            color: 'red-5',
+            textColor: 'white',
+
+            icon: 'warning',
+            message: 'une erreur est survenue !',
+            progress: true,
+            classes: 'glossy',
+          })
+
+        })
+
+        photo_profil.value = userStore.stateUser.user.photo
+
+      }, 5000);
+
+    }
+
     return {
+      checkNotificationAll () {
+
+        axios.get(process.env.API + '/api/user/notifications/check-all/' + userStore.stateUser.user.email).then(res => {
+
+          if (res.data.succes) {
+
+            notifications.value = []
+
+            axios.get(process.env.API + '/api/user/notifications/' + userStore.stateUser.user.email).then(res => {
+
+              if (res.data.succes) {
+
+                notifications.value = res.data.notifications
+
+              } else {
+
+                $q.notify({
+                  timeout: 1000,
+                  color: 'red-5',
+                  textColor: 'white',
+
+                  icon: 'warning',
+                  message: res.data.message,
+                  progress: true,
+                  classes: 'glossy',
+                })
+
+              }
+
+            }).catch(error => {
+
+              $q.notify({
+                timeout: 1000,
+                color: 'red-5',
+                textColor: 'white',
+
+                icon: 'warning',
+                message: 'une erreur est survenue !',
+                progress: true,
+                classes: 'glossy',
+              })
+
+            })
+
+          } else {
+
+            $q.notify({
+              timeout: 1000,
+              color: 'red-5',
+              textColor: 'white',
+
+              icon: 'warning',
+              message: res.data.message,
+              progress: true,
+              classes: 'glossy',
+            })
+
+          }
+
+        }).catch(error => {
+
+          $q.notify({
+            timeout: 1000,
+            color: 'red-5',
+            textColor: 'white',
+
+            icon: 'warning',
+            message: 'une erreur est survenue !',
+            progress: true,
+            classes: 'glossy',
+          })
+
+        })
+
+      },
+      checkNotification (id) {
+
+        notificationsDialog.value = false
+
+        axios.get(process.env.API + '/api/user/notifications/check/' + userStore.stateUser.user.email + '/' + id).then(res => {
+
+          if (res.data.succes) {
+
+            notifications.value = []
+
+            axios.get(process.env.API + '/api/user/notifications/' + userStore.stateUser.user.email).then(res => {
+
+              if (res.data.succes) {
+
+                notifications.value = res.data.notifications
+
+              } else {
+
+                $q.notify({
+                  timeout: 1000,
+                  color: 'red-5',
+                  textColor: 'white',
+
+                  icon: 'warning',
+                  message: res.data.message,
+                  progress: true,
+                  classes: 'glossy',
+                })
+
+              }
+
+            }).catch(error => {
+
+              $q.notify({
+                timeout: 1000,
+                color: 'red-5',
+                textColor: 'white',
+
+                icon: 'warning',
+                message: 'une erreur est survenue !',
+                progress: true,
+                classes: 'glossy',
+              })
+
+            })
+
+          } else {
+
+            $q.notify({
+              timeout: 1000,
+              color: 'red-5',
+              textColor: 'white',
+
+              icon: 'warning',
+              message: res.data.message,
+              progress: true,
+              classes: 'glossy',
+            })
+
+          }
+
+        }).catch(error => {
+
+          $q.notify({
+            timeout: 1000,
+            color: 'red-5',
+            textColor: 'white',
+
+            icon: 'warning',
+            message: 'une erreur est survenue !',
+            progress: true,
+            classes: 'glossy',
+          })
+
+        })
+
+      },
+      notificationsDialog,
+      user,
+      notifications,
+      isLoggedIn: isLoggedIn,
       moment,
       connexionState,
       onLine: navigator.onLine,
@@ -224,7 +537,8 @@ export default defineComponent({
           text: 'Condition général de vente',
           link: '/'
         }
-      ]
+      ],
+      photo_profil
     }
 
   },
@@ -237,14 +551,15 @@ export default defineComponent({
   watch: {
     onLine (v) {
       if (v) {
-        this.showBackOnline = true
+        connexionState.value = true
         setTimeout(() => {
-          this.showBackOnline = false
+          connexionState.value = false
         }, 1000)
       }
     }
   },
   mounted () {
+
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)
 
@@ -271,7 +586,7 @@ export default defineComponent({
       states[Connection.NONE] = false
 
       if (states[networkState] === true) {
-        //
+
       } else {
         setInterval(() => {
           connexionState.value = states[networkState]
