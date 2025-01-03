@@ -1,23 +1,53 @@
 <template name="FooterComponenet">
 
+  <q-footer v-if="isLoggedIn && user.user_type <= 1" bordered class="bg-light-blue-9 glossy text-white">
+
+    <q-tabs no-caps active-color="white" indicator-color="transparent" v-model="tab">
+
+      <q-tab :disable="(tab === 'home') ? true : false" name="home" v-ripple>
+        <q-icon name="home" size="md" />
+      </q-tab>
+
+      <q-tab :disable="(tab === 'add_prestation') ? true : false" name="add_prestation" v-ripple>
+        <q-icon name="add" size="md" />
+      </q-tab>
+
+      <q-tab :disable="(tab === 'list_prestations') ? true : false" name="list_prestations" v-ripple>
+        <q-icon name="list_alt" size="md" />
+      </q-tab>
+
+    </q-tabs>
+
+  </q-footer>
+
 </template>
 
 <script>
 import { defineComponent } from 'vue'
-import { useQuasar } from 'quasar'
+import { SessionStorage, useQuasar } from 'quasar'
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from 'stores/user'
+
+const tab = ref('')
 
 export default defineComponent({
   name: 'FooterComponent',
   setup () {
 
     const $q = useQuasar()
+    const userStore = useUserStore()
+    const { isLoggedIn, user } = storeToRefs(userStore)
 
     return {
+      user,
+      isLoggedIn: isLoggedIn,
+      tab,
       onLine: navigator.onLine,
       connectionNotif () {
 
         $q.notify({
-          timeout: 1000,
+          timeout: 2000,
           group: true,
           progress: true,
           icon: 'fa-solid fa-wifi',
@@ -31,7 +61,7 @@ export default defineComponent({
       connectionNotif2 () {
 
         $q.notify({
-          timeout: 1000,
+          timeout: 2000,
           group: true,
           progress: true,
           icon: 'signal_wifi_off',
@@ -62,6 +92,14 @@ export default defineComponent({
     }
   },
   mounted () {
+
+    // Menu Tab Footer
+    if (this.$route.path === '/') {
+      tab.value = 'home'
+    } else {
+      tab.value = 'home'
+    }
+
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)
 
@@ -92,7 +130,7 @@ export default defineComponent({
       } else {
         setInterval(() => {
           $q.notify({
-            timeout: 1000,
+            timeout: 2000,
             group: true,
             icon: 'signal_wifi_off',
             progress: true,

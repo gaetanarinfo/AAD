@@ -1,10 +1,9 @@
 <template>
-  <q-page :class="(!connexionState) ? 'disabled flex flex-center' : 'flex flex-center'" :style-fn="heightAuto"
-    style="padding: 0px 1rem;display: grid;grid-template-columns: 1fr;align-items: center;align-content: space-evenly;justify-content: center;min-height: 90vh;position: relative;">
+  <q-page :class="(!connexionState) ? 'disabled q-page' : 'q-page'" :style-fn="heightAuto">
 
     <Section1Component :connexionState="connexionState" />
 
-    <Section2Component />
+    <Section2Component :connexionState="connexionState" />
 
     <FooterComponent />
 

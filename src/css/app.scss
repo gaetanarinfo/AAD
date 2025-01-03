@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap');
 
-// App
-
 .loadings {
     min-height: 100vh;
     display: flex;
@@ -119,6 +117,58 @@
 
 // Others Style
 
+.q-page {
+    padding: 0px 1rem;
+    position: relative;
+    min-height: calc(100vh - 50px) !important;
+    display: flex;
+    height: 100% !important;
+    flex-direction: column !important;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.q-page-start {
+    justify-content: start;
+}
+
+.q-page .q-responsive__content.absolute-full {
+    position: relative;
+}
+
+.q-page .q-responsive__filler.overflow-hidden {
+    display: none;
+}
+
+.header-table {
+    font-weight: 600 !important;
+}
+
+.form-padding {
+    padding-right: 15px;
+}
+
+.form-w {
+    max-width: 468px;
+}
+
+@media all and (max-width: 480px) {
+
+    .form-padding {
+        padding-right: 0;
+    }
+
+    .q-form .row-form {
+        flex-direction: column;
+    }
+
+    .q-form .row-form .col-6 {
+        width: 100%;
+    }
+
+}
+
 h1,
 h2,
 h3,
@@ -127,6 +177,36 @@ h5,
 h6,
 p {
     font-family: "Heebo", sans-serif;
+}
+
+.title {
+    font-weight: 600;
+    margin: 0;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+h5 {
+    color: #27a4dc !important;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+p {
+    font-size: 30px;
+    line-height: normal;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.bloc-informations p {
+    letter-spacing: normal;
+    text-transform: none;
+    font-weight: normal;
+    font-size: 18px;
 }
 
 @media all and (max-width: 768px) {
@@ -145,6 +225,17 @@ p {
         font-weight: 600;
         letter-spacing: 2px;
         text-transform: uppercase;
+    }
+
+    .title {
+        font-weight: 600;
+        margin: 0.5rem 0;
+    }
+
+    .bloc-informations p {
+        letter-spacing: normal;
+        text-transform: none;
+        font-weight: normal;
     }
 
 
@@ -185,6 +276,76 @@ p {
 .text-white .text-light-blue-9,
 .text-white .q-item__label--caption {
     color: #fff !important;
+}
+
+.q-field--dense .q-field__after {
+    padding-left: 0;
+    margin-top: 20px;
+}
+
+.card-entreprise-stats {
+    width: 100%;
+    max-width: 250px;
+}
+
+.q-expansion-item__container .q-item {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#tab-accounting .q-tab__label {
+    font-weight: bold;
+}
+
+.leftDrawerOpenSettings,
+.leftDrawerOpen {
+    width: 100%;
+}
+
+@media all and (max-width: 246px) {
+
+    .leftDrawerOpen {
+        width: 246px;
+    }
+
+    .leftDrawerOpenSettings {
+        width: 280px;
+    }
+
+    .leftDrawerUser {
+        width: 280px;
+    }
+
+}
+
+// 404
+
+.h1 {
+    font-size: 100px;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #27a4dc !important;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.00833em;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+.p {
+    font-size: 16px;
+    line-height: normal;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+    margin-bottom: 2rem;
 }
 
 // Animations

@@ -49,8 +49,13 @@ export default defineComponent({
         axios.get(process.env.API + '/api/user/authenticate/' + SessionStorage.getItem('token'))
           .then(res => {
 
-            if (res.data.user !== undefined) {
-              userStore.$state.stateUser.user = res.data.user;
+            if (res.data.authenticate.user !== undefined) {
+              userStore.$state.stateUser.user = res.data.authenticate.user;
+
+              if (res.data.authenticate.user.user_type === 2) {
+                userStore.$state.stateUser.companie = res.data.authenticate.companie;
+              }
+
             }
 
           })
@@ -102,6 +107,8 @@ export default defineComponent({
   },
   mounted () {
     this.showLoading()
+
+    SessionStorage.setItem('card_pro', false)
 
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)

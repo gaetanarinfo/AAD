@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
 
-    <q-header :class="(!connexionState) ? 'disabled' : ''" elevated>
+    <q-header :class="(!connexionState) ? 'disable' : ''" elevated style="position: relative;">
 
       <q-toolbar class="glossy bg-light-blue-9">
 
@@ -13,7 +13,7 @@
 
         <transition appear enter-active-class="animated jackInTheBox slower" leave-active-class="animated jackInTheBox">
 
-          <q-btn :disabled="notifications.length === 0 || !isLoggedIn" v-ripple flat dense round class="q-mr-md"
+          <q-btn :disable="notifications.length === 0 || !isLoggedIn" v-ripple flat dense round class="q-mr-md"
             icon="notifications"
             @click="!notificationsDialog && notifications.length >= 1 ? notificationsDialog = true : notificationsDialog = false"
             aria-label="Notifications">
@@ -28,13 +28,25 @@
 
         <transition appear enter-active-class="animated jackInTheBox slower" leave-active-class="animated jackInTheBox">
 
-          <q-btn :disabled="!isLoggedIn" flat dense v-ripple class="q-mr-xs" round aria-label="Espace utilisateur">
-            <q-avatar size="26px">
+          <q-btn :disable="!isLoggedIn" flat dense v-ripple class="q-mr-xs" @click="toggleLeftDrawerUser" round
+            aria-label="Espace utilisateur">
+
+            <q-avatar size="26px" v-show="!submittingStatus && !card_pro">
+
               <q-img spinner-color="light-blue-9" spinner-size="15px" v-if="photo_profil === ''"
                 src="~assets/utilisateur.png" />
               <q-img spinner-color="light-blue-9" style="min-width: 26px; max-width: 26px;" spinner-size="15px" v-else
                 :src="photo_profil" />
+
             </q-avatar>
+
+            <q-avatar size="26px" v-show="!submittingStatus && card_pro">
+
+              <q-img spinner-color="light-blue-9" style="min-width: 26px; max-width: 26px;" spinner-size="15px"
+                :src="photo_profil_pro" />
+
+            </q-avatar>
+
           </q-btn>
 
         </transition>
@@ -43,7 +55,8 @@
 
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" :class="(!connexionState) ? 'disabled' : ''" show-if-above bordered :width="246">
+    <q-drawer v-model="leftDrawerOpen" :class="(!connexionState) ? 'disabled leftDrawerOpen' : 'leftDrawerOpen'"
+      bordered>
 
       <q-scroll-area class="fit">
 
@@ -77,7 +90,7 @@
 
           <div class="q-py-md q-px-md text-grey-9">
             <div class="row items-center q-gutter-x-sm q-gutter-y-xs">
-              <a v-for="footer in footers" :key="footer.text" class="q-footer-layout"
+              <a v-for="footer in footers" :key="footer.text" class="q-footer-layout cursor-pointer"
                 @click="this.$router.push(footer.link)">
                 {{ footer.text }}
               </a>
@@ -104,7 +117,8 @@
 
     </q-drawer>
 
-    <q-drawer v-model="leftDrawerOpenSettings" :class="(!connexionState) ? 'disabled' : ''" show-if-above bordered>
+    <q-drawer v-model="leftDrawerOpenSettings"
+      :class="(!connexionState) ? 'disabled leftDrawerOpenSettings' : 'leftDrawerOpenSettings'" bordered>
       <q-list>
         <SettingsComponent />
       </q-list>
@@ -125,7 +139,299 @@
 
     </q-drawer>
 
-    <q-page-container>
+    <q-drawer v-if="isLoggedIn" v-model="leftDrawerUser"
+      :class="(!connexionState) ? 'disabled leftDrawerUser' : 'leftDrawerUser'" :breakpoint="400">
+
+      <q-scroll-area v-if="user.user_type === 1 || user.user_type >= 2" v-show="!submittingStatus && !card_pro"
+        style="height: calc(100% - 160px); margin-top: 160px; border-right: 1px solid #ddd">
+
+        <q-list padding>
+
+          <q-item :active="this.$route.path === '/my-account'" active-class="text-light-blue-9"
+            @click="this.$router.push('/my-account')" v-ripple clickablee>
+
+            <q-item-section avatar>
+              <q-icon name="edit" />
+            </q-item-section>
+
+            <q-item-section>
+              Gestion du compte
+            </q-item-section>
+
+          </q-item>
+
+          <q-item clickable v-ripple v-if="user.user_type === 1">
+
+            <q-item-section avatar>
+              <q-icon name="list_alt" />
+            </q-item-section>
+
+            <q-item-section>
+              Demandes de service
+            </q-item-section>
+
+          </q-item>
+
+          <q-item clickable v-ripple v-if="user.user_type === 1">
+
+            <q-item-section avatar>
+              <q-icon name="event_note" />
+            </q-item-section>
+
+            <q-item-section>
+              Mon planning
+            </q-item-section>
+
+          </q-item>
+
+          <q-item clickable v-ripple>
+
+            <q-item-section avatar>
+              <q-icon name="inbox" />
+            </q-item-section>
+
+            <q-item-section>
+              Messagerie
+            </q-item-section>
+
+          </q-item>
+
+          <q-item clickable v-ripple>
+
+            <q-item-section avatar>
+              <q-icon name="close" color="red-9" />
+            </q-item-section>
+
+            <q-item-section>
+              Clôturer le compte
+            </q-item-section>
+
+          </q-item>
+
+          <q-item @click="logout()" v-ripple clickable>
+
+            <q-item-section avatar>
+              <q-icon name="logout" />
+            </q-item-section>
+
+            <q-item-section>
+              Déconnexion
+            </q-item-section>
+
+          </q-item>
+
+        </q-list>
+
+      </q-scroll-area>
+
+      <q-scroll-area v-if="user.user_type >= 2" v-show="!submittingStatus && card_pro"
+        style="height: calc(100% - 160px); margin-top: 160px; border-right: 1px solid #ddd">
+
+        <q-list padding>
+
+          <q-item :active="this.$route.path === '/companie'" active-class="text-light-blue-9"
+            @click="this.$router.push('/companie')" v-ripple clickable>
+
+            <q-item-section avatar>
+              <q-icon name="edit" />
+            </q-item-section>
+
+            <q-item-section>
+              Gestion du compte
+            </q-item-section>
+
+          </q-item>
+
+          <q-item :active="this.$route.path === '/companie/users'" active-class="text-light-blue-9"
+            @click="this.$router.push('/companie/users')" v-ripple clickable>
+
+            <q-item-section avatar>
+              <q-icon name="group" />
+            </q-item-section>
+
+            <q-item-section>
+              Gestion des employés
+            </q-item-section>
+
+          </q-item>
+
+          <q-item>
+
+            <q-item-section avatar>
+              <q-icon name="event_note" />
+            </q-item-section>
+
+            <q-item-section>
+              Gestion du planning
+            </q-item-section>
+
+          </q-item>
+
+          <q-item :active="this.$route.path === '/companie/services'" active-class="text-light-blue-9"
+            @click="this.$router.push('/companie/services')" v-ripple clickable>
+
+            <q-item-section avatar>
+              <q-icon name="design_services" />
+            </q-item-section>
+
+            <q-item-section>
+              Mes prestations
+            </q-item-section>
+
+          </q-item>
+
+          <q-item :active="this.$route.path === '/companie/accounting'" active-class="text-light-blue-9"
+            @click="this.$router.push('/companie/accounting')" v-ripple clickable>
+
+            <q-item-section avatar>
+              <q-icon name="description" />
+            </q-item-section>
+
+            <q-item-section>
+              Comptabilité
+            </q-item-section>
+
+          </q-item>
+
+          <q-item :active="this.$route.path === '/companie/orders'" active-class="text-light-blue-9"
+            @click="this.$router.push('/companie/orders')" v-ripple clickable>
+
+            <q-item-section avatar>
+              <q-icon name="shopping_cart" />
+            </q-item-section>
+
+            <q-item-section>
+              Historique des commandes
+            </q-item-section>
+
+          </q-item>
+
+          <q-item clickable v-ripple>
+
+            <q-item-section avatar>
+              <q-icon name="history" />
+            </q-item-section>
+
+            <q-item-section>
+              Historique des prestations
+            </q-item-section>
+
+          </q-item>
+
+          <q-item @click="logout()" v-ripple clickable>
+
+            <q-item-section avatar>
+              <q-icon name="logout" />
+            </q-item-section>
+
+            <q-item-section>
+              Déconnexion
+            </q-item-section>
+
+          </q-item>
+
+        </q-list>
+
+      </q-scroll-area>
+
+      <q-img class="absolute-top" spinner-color="light-blue-9" spinner-size="15px" src="~/assets/material.jpg"
+        style="height: 160px">
+
+        <transition v-show="submittingStatus" appear enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut">
+
+          <div class="absolute-center bg-transparent">
+            <q-spinner-gears size="xl" />
+          </div>
+
+        </transition>
+
+        <transition v-show="!submittingStatus && !card_pro" appear enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut">
+
+          <div class="absolute-bottom bg-transparent">
+
+            <q-avatar size="56px" class="q-mb-sm shadow-3">
+
+              <q-img spinner-color="light-blue-9" spinner-size="15px" v-if="photo_profil === ''"
+                src="~assets/utilisateur.png" />
+
+              <q-img spinner-color="light-blue-9" spinner-size="15px" v-else :src="photo_profil" />
+
+            </q-avatar>
+
+            <div class="text-weight-bold">{{ user.firstname + ' ' + user.lastname }}</div>
+
+            <div class="text-weight-bold">Compte {{ (user.user_type === 1) ? 'Utilisateur' :
+              (user.user_type === 2) ?
+                'Professionnelle' : '' }}
+            </div>
+
+            <div class="text-weight-bold">Inscrit depuis le {{
+              moment(user.created_at).format('DD/MM/YYYY') }}</div>
+
+            <div v-if="user.user_type === 2" class="absolute-top-right q-ma-md">
+
+              <q-btn @click="switchStatus()" v-ripple dense flat round size="md">
+
+                <q-icon name="change_circle" size="md" color="white" />
+
+                <q-tooltip>
+                  Passez à la version pro
+                </q-tooltip>
+
+              </q-btn>
+
+            </div>
+
+          </div>
+
+        </transition>
+
+        <transition v-show="!submittingStatus && card_pro" appear enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut">
+
+          <div class="absolute-bottom bg-transparent">
+
+            <q-avatar size="56px" class="q-mb-sm shadow-3">
+
+              <q-img spinner-color="light-blue-9" spinner-size="15px" :src="photo_profil_pro" />
+
+            </q-avatar>
+
+            <div class="text-weight-bold">{{ companie.name }}</div>
+
+            <div class="text-weight-bold">Compte {{ (user.user_type === 1) ? 'Utilisateur' :
+              (user.user_type === 2) ?
+                'Professionnelle' : '' }}
+            </div>
+
+            <div class="text-weight-bold">Fondé le {{
+              moment(companie.founding_date).format('DD/MM/YYYY') }}</div>
+
+            <div v-if="user.user_type === 2" class="absolute-top-right q-ma-md">
+
+              <q-btn @click="switchStatus()" v-ripple dense flat round size="md">
+
+                <q-icon name="change_circle" size="md" color="white" />
+
+                <q-tooltip>
+                  Passez à la version utilisateur
+                </q-tooltip>
+
+              </q-btn>
+
+            </div>
+
+          </div>
+
+        </transition>
+
+      </q-img>
+
+    </q-drawer>
+
+    <q-page-container style="padding-bottom: 0; padding-top: 0;">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -143,8 +449,8 @@
         <q-toolbar-title style="text-transform: uppercase; font-weight: 600;">Notifications</q-toolbar-title>
 
         <q-btn flat round v-ripple dense icon="done_all" @click="checkNotificationAll" v-close-popup />
-      </q-toolbar>
 
+      </q-toolbar>
 
       <q-list bordered separator>
 
@@ -156,7 +462,10 @@
 
           <q-item-section>
             {{ notification.name }}<br />
-            <span style="font-weight: normal; text-transform: initial;">{{ notification.content }}</span>
+            <span style="font-weight: normal; text-transform: initial;">{{ notification.content }} <span
+                v-if="notification.type === 'register'"><a type="button"
+                  @click="validateAccount(), checkNotification(notification.id)"
+                  style="font-weight: normal; text-transform: initial;">cliquant ici</a></span></span>
           </q-item-section>
 
           <q-item-section avatar>
@@ -182,20 +491,26 @@ import MenuComponent from 'src/components/Menu.vue'
 import SettingsComponent from 'src/components/Settings.vue'
 import { defineComponent, onMounted, computed } from 'vue'
 import { useUserStore } from 'stores/user'
-import moment from 'moment'
+import moment from 'moment/min/moment-with-locales';
 import { storeToRefs } from 'pinia'
 import axios from 'axios'
-import { useQuasar } from 'quasar'
+import { SessionStorage, useQuasar } from 'quasar'
+import { useRouter } from "vue-router"
 
 moment.locale('fr')
 
 const leftDrawerOpen = ref(false),
   leftDrawerOpenSettings = ref(false),
+  leftDrawerUser = ref(false),
   connexionState = ref(true),
   notifications = ref([]),
   user = ref([]),
+  companie = ref([]),
   notificationsDialog = ref(false),
-  photo_profil = ref('')
+  photo_profil = ref(''),
+  photo_profil_pro = ref(''),
+  submittingStatus = ref(false),
+  card_pro = ref(false)
 
 export default defineComponent({
   name: 'MainLayout',
@@ -208,6 +523,7 @@ export default defineComponent({
     const userStore = useUserStore()
     const { isLoggedIn } = storeToRefs(userStore)
     const $q = useQuasar()
+    const router = useRouter()
 
     if (connexionState.value && isLoggedIn.value) {
 
@@ -220,7 +536,7 @@ export default defineComponent({
         } else {
 
           $q.notify({
-            timeout: 1000,
+            timeout: 2000,
             color: 'red-5',
             textColor: 'white',
 
@@ -235,7 +551,7 @@ export default defineComponent({
       }).catch(error => {
 
         $q.notify({
-          timeout: 1000,
+          timeout: 2000,
           color: 'red-5',
           textColor: 'white',
 
@@ -248,6 +564,12 @@ export default defineComponent({
       })
 
       photo_profil.value = userStore.stateUser.user.photo
+      user.value = userStore.stateUser.user
+
+      if (user.value.user_type === 2) {
+        photo_profil_pro.value = userStore.stateUser.user.logo
+        companie.value = userStore.stateUser.companie
+      }
 
       setInterval(() => {
 
@@ -260,7 +582,7 @@ export default defineComponent({
           } else {
 
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -275,7 +597,7 @@ export default defineComponent({
         }).catch(error => {
 
           $q.notify({
-            timeout: 1000,
+            timeout: 2000,
             color: 'red-5',
             textColor: 'white',
 
@@ -288,12 +610,102 @@ export default defineComponent({
         })
 
         photo_profil.value = userStore.stateUser.user.photo
+        user.value = userStore.stateUser.user
+
+        if (user.value.user_type === 2) {
+          photo_profil_pro.value = userStore.stateUser.companie.logo
+          companie.value = userStore.stateUser.companie
+        }
 
       }, 5000);
 
     }
 
     return {
+      logout () {
+        SessionStorage.clear()
+        window.location.reload()
+        router.push('/')
+      },
+      card_pro,
+      photo_profil_pro,
+      submittingStatus,
+      switchStatus () {
+
+        submittingStatus.value = true
+
+        if (card_pro.value === false) {
+
+          SessionStorage.setItem('card_pro', true)
+
+          setTimeout(() => {
+            submittingStatus.value = false
+            card_pro.value = true
+          }, 1500);
+
+        } else {
+
+          SessionStorage.setItem('card_pro', false)
+
+          router.push('/my-account')
+
+          setTimeout(() => {
+            submittingStatus.value = false
+            card_pro.value = false
+          }, 1500);
+
+        }
+
+      },
+      validateAccount () {
+
+        notificationsDialog.value = false
+
+        axios.get(process.env.API + '/api/user/activate/' + userStore.stateUser.user.email).then(res => {
+
+          if (res.data.succes) {
+
+            $q.notify({
+              timeout: 2000,
+              color: 'green-5',
+              textColor: 'white',
+              icon: 'cloud_done',
+              message: res.data.message,
+              progress: true,
+              classes: 'glossy',
+            })
+
+          } else {
+
+            $q.notify({
+              timeout: 2000,
+              color: 'red-5',
+              textColor: 'white',
+
+              icon: 'warning',
+              message: res.data.message,
+              progress: true,
+              classes: 'glossy',
+            })
+
+          }
+
+        }).catch(error => {
+
+          $q.notify({
+            timeout: 2000,
+            color: 'red-5',
+            textColor: 'white',
+
+            icon: 'warning',
+            message: res.data.message,
+            progress: true,
+            classes: 'glossy',
+          })
+
+        })
+
+      },
       checkNotificationAll () {
 
         axios.get(process.env.API + '/api/user/notifications/check-all/' + userStore.stateUser.user.email).then(res => {
@@ -311,7 +723,7 @@ export default defineComponent({
               } else {
 
                 $q.notify({
-                  timeout: 1000,
+                  timeout: 2000,
                   color: 'red-5',
                   textColor: 'white',
 
@@ -326,7 +738,7 @@ export default defineComponent({
             }).catch(error => {
 
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'red-5',
                 textColor: 'white',
 
@@ -341,7 +753,7 @@ export default defineComponent({
           } else {
 
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -356,7 +768,7 @@ export default defineComponent({
         }).catch(error => {
 
           $q.notify({
-            timeout: 1000,
+            timeout: 2000,
             color: 'red-5',
             textColor: 'white',
 
@@ -388,7 +800,7 @@ export default defineComponent({
               } else {
 
                 $q.notify({
-                  timeout: 1000,
+                  timeout: 2000,
                   color: 'red-5',
                   textColor: 'white',
 
@@ -403,7 +815,7 @@ export default defineComponent({
             }).catch(error => {
 
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'red-5',
                 textColor: 'white',
 
@@ -418,7 +830,7 @@ export default defineComponent({
           } else {
 
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -433,7 +845,7 @@ export default defineComponent({
         }).catch(error => {
 
           $q.notify({
-            timeout: 1000,
+            timeout: 2000,
             color: 'red-5',
             textColor: 'white',
 
@@ -448,16 +860,21 @@ export default defineComponent({
       },
       notificationsDialog,
       user,
+      companie,
       notifications,
       isLoggedIn: isLoggedIn,
-      moment,
+      moment: moment,
       connexionState,
       onLine: navigator.onLine,
       version: process.env.VERSION,
       leftDrawerOpen,
       leftDrawerOpenSettings,
+      leftDrawerUser,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
+      },
+      toggleLeftDrawerUser () {
+        leftDrawerUser.value = !leftDrawerUser.value
       },
       settings () {
         leftDrawerOpenSettings.value = !leftDrawerOpenSettings.value
@@ -527,15 +944,15 @@ export default defineComponent({
       footers: [
         {
           text: 'Politique de confidentialité',
-          link: '/'
+          link: '/politique-confidentialite'
         },
         {
           text: 'Condition général d\'utilisation',
-          link: '/'
+          link: '/cgu'
         },
         {
           text: 'Condition général de vente',
-          link: '/'
+          link: '/cgv'
         }
       ],
       photo_profil
@@ -559,6 +976,10 @@ export default defineComponent({
     }
   },
   mounted () {
+
+    leftDrawerOpen.value = false
+    leftDrawerOpenSettings.value = false
+    leftDrawerUser.value = false
 
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)

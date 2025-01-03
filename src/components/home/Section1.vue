@@ -1,8 +1,10 @@
 <template name="Section1Component">
 
   <!-- Logo -->
-  <transition v-show="logo" appear enter-active-class="animated rollIn" leave-active-class="animated rollOut">
-    <div class="w-100 flex flex-center column">
+  <transition v-show="logo" appear enter-active-class="animated fadeIn"
+    :style="(register2 || register2_2 || register3 || register4 || register5 || register6 || register7 || register8 || paiement_pro) ? 'margin-top: 30px;' : ''"
+    leave-active-class="animated fadeOut">
+    <div class="w-100 flex flex-center column form-w">
 
       <q-img src="~assets/logo.png" spinner-color="light-blue-9" style="max-width: 150px; min-height: 150px"
         alt="AAD - Services à la personne"></q-img>
@@ -22,23 +24,23 @@
   <!-- Loader -->
   <transition v-show="loader" appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
 
-    <div id="loader" class="column flex-center" style="min-height: 90vh; height: 100%;">
+    <div class="column flex-center" style="min-height: calc(100vh - 50px); height: 100%;">
       <q-spinner-tail size="50px" color="light-blue-9" />
     </div>
 
   </transition>
 
   <!--Register Or Login -->
-  <transition v-show="defaults && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="defaults && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div id="step1" class="column text-center w-100">
+    <div id="step1" class="column text-center w-100 form-w">
 
-      <div>
+      <div class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Êtes-vous inscit ?</h5>
+        <h5 class="q-mt-md q-mb-md">Disposez-vous d'un compte ?</h5>
 
-        <q-list style="min-width: 300px; text-align: left;" bordered separator>
+        <q-list style="text-align: left;" bordered separator>
           <q-item clickable v-ripple :active="active" @click="setStep('register')"
             active-class="bg-light-blue-9 glossy text-white">
             <q-item-section avatar>
@@ -57,7 +59,7 @@
         </q-list>
 
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
-          <q-btn size="xl" :disabled="disabled" @click="clickStep()" color="light-blue-9 glossy"
+          <q-btn size="xl" :disable="disabled" @click="clickStep()" color="light-blue-9 glossy"
             style="max-width: 100px;" v-ripple dense rounded icon="arrow_forward"></q-btn>
         </div>
 
@@ -68,16 +70,16 @@
   </transition>
 
   <!-- Login -->
-  <transition v-show="login && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="login && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
     <div id="step3" class="column text-center w-100">
 
-      <div>
+      <div class="q-mt-md">
 
         <h5 class="q-mt-md q-mb-md">Connexion</h5>
 
-        <q-form @submit="onSubmitLogin" class="q-gutter-md q-mt-md">
+        <q-form @submit="onSubmitLogin" class="q-mt-md">
 
           <q-input dense filled v-model="email" label="Adresse email *" lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !',
           (val, rules) => rules.email(val) || 'S\'il vous plaît, mettez une adresse email valide !']">
@@ -120,16 +122,16 @@
   </transition>
 
   <!-- Register Choice 1 -->
-  <transition v-show="register && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="register && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div id="step2" class="column text-center w-100">
+    <div id="step2" class="column text-center w-100 form-w">
 
-      <div>
+      <div class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Vous êtes ?</h5>
+        <h5 class="q-mt-md q-mb-md">Êtes-vous ?</h5>
 
-        <q-list style="min-width: 300px; text-align: left;" bordered separator>
+        <q-list style="text-align: left;" bordered separator>
           <q-item clickable v-ripple :active="active" @click="setStep('registerParticulier')"
             active-class="bg-light-blue-9 glossy text-white">
             <q-item-section avatar>
@@ -148,7 +150,7 @@
         </q-list>
 
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
-          <q-btn size="xl" v-ripple :disabled="disabled" @click="clickStep()" color="light-blue-9 glossy"
+          <q-btn size="xl" v-ripple :disable="disabled" @click="clickStep()" color="light-blue-9 glossy"
             style="max-width: 100px;" dense rounded icon="arrow_forward"></q-btn>
         </div>
 
@@ -159,16 +161,16 @@
   </transition>
 
   <!-- Register Choice Particulier -->
-  <transition v-show="register6 && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="register6 && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div class="column text-center w-100">
+    <div class="column text-center w-100 form-w">
 
-      <q-form @submit="onSubmitRegister(6)" class="q-gutter-md q-mt-md">
+      <q-form @submit="onSubmitRegister(6)" class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Données personnelles ?</h5>
+        <h5 class="q-mt-md q-mb-md">Données personnelles</h5>
 
-        <div class="flex-start row items-center">
+        <div class="flex-start row items-center" style="margin-bottom: 16px;">
 
           <q-item-label>Civilité :</q-item-label>
 
@@ -180,43 +182,55 @@
 
         </div>
 
-        <q-input dense filled v-model="lastname" label="Nom *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="lastname" label="Nom *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="title" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="title" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
-        <q-input dense filled v-model="firstname" label="Prénom *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+          <div class="col-6">
+            <q-input dense filled v-model="firstname" label="Prénom *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="title" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="title" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+        </div>
 
-        <q-input dense filled v-model="fonction" label="Fonction *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="fonction" label="Fonction *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="title" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="title" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
-        <q-input dense filled v-model="adresse" @keyup="getAdresse" label="Adresse *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+          <div class="col-6">
+            <q-input dense filled v-model="adresse" @keyup="getAdresse" label="Adresse *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="location_on" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="location_on" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+        </div>
 
-        <q-list bordered separator v-show="showAdresses" style="margin-bottom: 32px;">
+        <q-list bordered separator v-show="showAdresses" style="margin-bottom: 16px;">
 
           <q-item clickable v-ripple @click="setAdress(adress)" v-for="adress in adresses">
 
@@ -244,74 +258,93 @@
 
         </q-list>
 
-        <q-input dense filled v-model="ville" label="Ville *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="ville" label="Ville *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="location_on" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="location_on" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
-        <q-input dense filled v-model="codepostal" mask="#####" label="Code postal *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+          <div class="col-6">
+            <q-input dense filled v-model="codepostal" mask="#####" label="Code postal *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="location_on" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="location_on" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+        </div>
 
-        <q-select style="margin-bottom: 32px;" dense filled v-model="pays" label="Pays *" map-options :options="options"
-          emit-value transition-show="scale" transition-hide="scale">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-select style="margin-bottom: 16px;" dense filled v-model="pays" label="Pays *" map-options
+              :options="options" emit-value transition-show="scale" transition-hide="scale">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="location_on" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="location_on" />
+              </template>
 
-          <template v-slot:option="{ itemProps, opt }">
+              <template v-slot:option="{ itemProps, opt }">
 
-            <q-item v-bind="itemProps">
+                <q-item v-bind="itemProps">
 
-              <q-item-section style="max-width: 30px;margin-right: 5px;">
-                <q-img spinner-color="light-blue-9" spinner-size="15px" style="max-width: 30px;"
-                  :src="folderAPI + '/flags/' + opt.flag" />
-              </q-item-section>
+                  <q-item-section style="max-width: 30px;margin-right: 5px;">
+                    <q-img spinner-color="light-blue-9" spinner-size="15px" style="max-width: 30px;"
+                      :src="folderAPI + '/flags/' + opt.flag" />
+                  </q-item-section>
 
-              <q-item-section>
-                <q-item-label v-html="opt.label" />
-              </q-item-section>
+                  <q-item-section>
+                    <q-item-label v-html="opt.label" />
+                  </q-item-section>
 
-            </q-item>
+                </q-item>
 
-          </template>
+              </template>
 
-        </q-select>
+            </q-select>
+          </div>
 
-        <q-input dense filled v-model="naissance" mask="##/##/####" label="Date de naissance *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
-          <template v-slot:prepend>
-            <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-date v-model="naissance" mask="DD/MM/YYYY" @input="() => $refs.qDateProxy.hide()">
-                  <div class="row items-center justify-end">
-                    <q-btn v-close-popup label="Fermer" color="light-blue-9" flat />
-                  </div>
-                </q-date>
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-        </q-input>
+          <div class="col-6">
+            <q-input dense filled v-model="naissance" mask="##/##/####" label="Date de naissance *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="naissance" mask="DD/MM/YYYY" @input="() => $refs.qDateProxy.hide()">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Fermer" color="light-blue-9" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+        </div>
 
-        <q-input dense filled mask="##-##-##-##-##" fill-mask v-model="phone" label="Téléphone *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled mask="##-##-##-##-##" fill-mask v-model="phone" label="Téléphone *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="smartphone" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="smartphone" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
+          <div class="col-6">
+          </div>
+
+        </div>
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
           <q-btn size="xl" type="submit" v-ripple color="light-blue-9 glossy" style="max-width: 100px;" dense rounded
             icon="arrow_forward"></q-btn>
@@ -324,42 +357,47 @@
   </transition>
 
   <!-- Register Choice Particulier 2 -->
-  <transition v-show="register8 && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="register8 && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div class="column text-center w-100">
+    <div class="column text-center w-100 form-w">
 
-      <q-form @submit="onSubmitRegister(8)" class="q-gutter-md q-mt-md">
+      <q-form @submit="onSubmitRegister(8)" class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Données de connexion ?</h5>
+        <h5 class="q-mt-md q-mb-md">Données de connexion</h5>
 
-        <q-input dense filled v-model="email" label="Adresse email *" lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !',
-        (val, rules) => rules.email(val) || 'S\'il vous plaît, mettez une adresse email valide !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="email" label="Adresse email *" lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !',
+            (val, rules) => rules.email(val) || 'S\'il vous plaît, mettez une adresse email valide !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="email" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="email" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
-        <q-input dense filled v-model="password" id="current-password" name="current-password" label="Mot de passe *"
-          lazy-rules :type="isPwd ? 'password' : 'text'"
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !', val => val && val.length > 7 || 'Votre mot de passe doit comporter au moins 8 caractères !']">
+          <div class="col-6">
+            <q-input dense filled v-model="password" id="current-password" name="current-password"
+              label="Mot de passe *" lazy-rules :type="isPwd ? 'password' : 'text'"
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !', val => val && val.length > 7 || 'Votre mot de passe doit comporter au moins 8 caractères !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="password" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="password" />
+              </template>
 
-          <template v-slot:append>
-            <q-icon size="xs" :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-              @click="isPwd = !isPwd" />
-          </template>
+              <template v-slot:append>
+                <q-icon size="xs" :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                  @click="isPwd = !isPwd" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+        </div>
 
         <q-toggle color="light-blue-9" class="q-mt-none text-left" checked-icon="check" unchecked-icon="clear"
-          keep-color v-model="accept" style="margin-top: 16px"
-          label="Je suis d'accord avec la licence et les conditions" />
+          keep-color v-model="accept" label="Je suis d'accord avec la licence et les conditions" />
 
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
           <q-btn size="xl" type="submit" v-ripple color="light-blue-9 glossy" style="max-width: 100px;" dense rounded
@@ -373,16 +411,16 @@
   </transition>
 
   <!-- Register Choice Particulier 3 -->
-  <transition v-show="register7 && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="register7 && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div class="column text-center w-100">
+    <div class="column text-center w-100 form-w">
 
-      <q-form @submit="onSubmitRegister(7)" class="q-gutter-md q-mt-md">
+      <q-form @submit="onSubmitRegister(7)" class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Photo de profil ?</h5>
+        <h5 class="q-mt-md q-mb-md">Photo de profil</h5>
 
-        <q-uploader bordered :form-fields="[{ name: 'name', value: 'value' }]" color="light-blue-9" filled
+        <q-uploader class="w-100" bordered :form-fields="[{ name: 'name', value: 'value' }]" color="light-blue-9" filled
           style="margin-bottom:40px;" @added="photoSelected" label="Photo (Format : Image) / (Taille : < 5mo)"
           :filter="checkFileSize" @rejected="onRejectedPhoto" accept="image/*">
 
@@ -396,7 +434,7 @@
                 <div class="q-uploader__title">(Format : Image) / (Taille : < 5mo)</div>
                 </div>
 
-                <q-btn v-if="uploadPercent" :disabled="true" icon="add_box" round dense flat>
+                <q-btn v-if="uploadPercent" :disable="true" icon="add_box" round dense flat>
                 </q-btn>
 
                 <q-btn v-else type="a" icon="add_box"
@@ -420,7 +458,7 @@
 
                 <q-item-section class="text-left" style="display: flex;flex-direction: row;align-items: center;">
 
-                  <q-item-label>
+                  <q-item-label style="word-break: break-word;max-width: 235px;">
                     {{ file.name }}
                   </q-item-label>
 
@@ -451,16 +489,16 @@
   </transition>
 
   <!-- Register Choice Professionnelle 2/5 -->
-  <transition v-show="register2 && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="register2 && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div class="column text-center w-100">
+    <div class="column text-center w-100 form-w">
 
-      <q-form @submit="onSubmitRegister(1)" class="q-gutter-md q-mt-md">
+      <q-form @submit="onSubmitRegister(1)" class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Données personnelles ?</h5>
+        <h5 class="q-mt-md q-mb-md">Données personnelles</h5>
 
-        <div class="flex-start row items-center">
+        <div class="flex-start row items-center" style="margin-bottom: 16px;">
 
           <q-item-label>Civilité :</q-item-label>
 
@@ -472,43 +510,55 @@
 
         </div>
 
-        <q-input dense filled v-model="lastname" label="Nom *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="lastname" label="Nom *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="title" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="title" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
-        <q-input dense filled v-model="firstname" label="Prénom *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+          <div class="col-6">
+            <q-input dense filled v-model="firstname" label="Prénom *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="title" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="title" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+        </div>
 
-        <q-input dense filled v-model="fonction" label="Fonction *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="fonction" label="Fonction *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="title" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="title" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
-        <q-input dense filled v-model="adresse" @keyup="getAdresse" label="Adresse *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+          <div class="col-6">
+            <q-input dense filled v-model="adresse" @keyup="getAdresse" label="Adresse *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="location_on" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="location_on" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+        </div>
 
-        <q-list bordered separator v-show="showAdresses" style="margin-bottom: 32px;">
+        <q-list bordered separator v-show="showAdresses" style="margin-bottom: 16px;">
 
           <q-item clickable v-ripple @click="setAdress(adress)" v-for="adress in adresses">
 
@@ -536,73 +586,93 @@
 
         </q-list>
 
-        <q-input dense filled v-model="ville" label="Ville *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="ville" label="Ville *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="location_on" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="location_on" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
-        <q-input dense filled v-model="codepostal" mask="#####" label="Code postal *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+          <div class="col-6">
+            <q-input dense filled v-model="codepostal" mask="#####" label="Code postal *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="location_on" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="location_on" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+        </div>
 
-        <q-select style="margin-bottom: 32px;" dense filled v-model="pays" label="Pays *" map-options :options="options"
-          emit-value transition-show="scale" transition-hide="scale">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-select style="margin-bottom: 16px;" dense filled v-model="pays" label="Pays *" map-options
+              :options="options" emit-value transition-show="scale" transition-hide="scale">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="location_on" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="location_on" />
+              </template>
 
-          <template v-slot:option="{ itemProps, opt }">
+              <template v-slot:option="{ itemProps, opt }">
 
-            <q-item v-bind="itemProps">
+                <q-item v-bind="itemProps">
 
-              <q-item-section style="max-width: 30px;margin-right: 5px;">
-                <q-img spinner-color="light-blue-9" spinner-size="15px" style="max-width: 30px;"
-                  :src="folderAPI + '/flags/' + opt.flag" />
-              </q-item-section>
+                  <q-item-section style="max-width: 30px;margin-right: 5px;">
+                    <q-img spinner-color="light-blue-9" spinner-size="15px" style="max-width: 30px;"
+                      :src="folderAPI + '/flags/' + opt.flag" />
+                  </q-item-section>
 
-              <q-item-section>
-                <q-item-label v-html="opt.label" />
-              </q-item-section>
+                  <q-item-section>
+                    <q-item-label v-html="opt.label" />
+                  </q-item-section>
 
-            </q-item>
+                </q-item>
 
-          </template>
+              </template>
 
-        </q-select>
+            </q-select>
+          </div>
 
-        <q-input dense filled v-model="naissance" mask="##/##/####" label="Date de naissance *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
-          <template v-slot:prepend>
-            <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-date v-model="naissance" mask="DD/MM/YYYY" @input="() => $refs.qDateProxy.hide()">
-                  <div class="row items-center justify-end">
-                    <q-btn v-close-popup label="Fermer" color="light-blue-9" flat />
-                  </div>
-                </q-date>
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-        </q-input>
+          <div class="col-6">
+            <q-input dense filled v-model="naissance" mask="##/##/####" label="Date de naissance *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="naissance" mask="DD/MM/YYYY" @input="() => $refs.qDateProxy.hide()">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Fermer" color="light-blue-9" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+        </div>
 
-        <q-input dense filled mask="##-##-##-##-##" fill-mask v-model="phone" label="Téléphone *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled mask="##-##-##-##-##" fill-mask v-model="phone" label="Téléphone *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="smartphone" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="smartphone" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+
+          <div class="col-6">
+
+          </div>
+        </div>
 
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
           <q-btn size="xl" type="submit" v-ripple color="light-blue-9 glossy" style="max-width: 100px;" dense rounded
@@ -616,16 +686,16 @@
   </transition>
 
   <!-- Register Choice Professionnelle 2.5/5 -->
-  <transition v-show="register2_2 && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="register2_2 && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div class="column text-center w-100">
+    <div class="column text-center w-100 form-w">
 
-      <q-form @submit="onSubmitRegister(2)" class="q-gutter-md q-mt-md">
+      <q-form @submit="onSubmitRegister(2)" class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Photo de profil ?</h5>
+        <h5 class="q-mt-md q-mb-md">Photo de profil</h5>
 
-        <q-uploader bordered :form-fields="[{ name: 'name', value: 'value' }]" color="light-blue-9" filled
+        <q-uploader class="w-100" bordered :form-fields="[{ name: 'name', value: 'value' }]" color="light-blue-9" filled
           style="margin-bottom:40px;" @added="photoSelected" label="Photo (Format : Image) / (Taille : < 5mo)"
           :filter="checkFileSize" @rejected="onRejectedPhoto" accept="image/*">
 
@@ -639,7 +709,7 @@
                 <div class="q-uploader__title">(Format : Image) / (Taille : < 5mo)</div>
                 </div>
 
-                <q-btn v-if="uploadPercent" :disabled="true" icon="add_box" round dense flat>
+                <q-btn v-if="uploadPercent" :disable="true" icon="add_box" round dense flat>
                 </q-btn>
 
                 <q-btn v-else type="a" icon="add_box"
@@ -663,7 +733,7 @@
 
                 <q-item-section class="text-left" style="display: flex;flex-direction: row;align-items: center;">
 
-                  <q-item-label>
+                  <q-item-label style="word-break: break-word;max-width: 235px;">
                     {{ file.name }}
                   </q-item-label>
 
@@ -694,18 +764,25 @@
   </transition>
 
   <!-- Register Choice Professionnelle 3/5 -->
-  <transition v-show="register3 && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="register3 && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div class="column text-center w-100">
+    <div class="column text-center w-100 form-w">
 
-      <q-form @submit="onSubmitRegister(3)" class="q-gutter-md q-mt-md">
+      <q-form @submit="onSubmitRegister(3)" class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Votre entreprise ?</h5>
+        <h5 class="q-mt-md q-mb-md">Votre entreprise</h5>
 
-        <q-uploader lazy-rules :form-fields="[{ name: 'name', value: 'value' }]" color="light-blue-9" dense filled
-          style="margin-bottom:40px;" @added="logoSelected" label="Logo (Format : Image) / (Taille : < 5mo)"
-          :filter="checkFileSize" @rejected="onRejectedLogo" accept="image/*">
+        <div style="font-size: 12px;font-weight: 600;" class="text-grey-8">Les
+          documents
+          sont systématiquement
+          vérifiés !
+        </div>
+
+        <q-uploader class="w-100 q-mt-sm" lazy-rules :form-fields="[{ name: 'name', value: 'value' }]"
+          color="light-blue-9" dense filled style="margin-bottom:40px;" @added="logoSelected"
+          label="Logo (Format : Image) / (Taille : < 5mo)" :filter="checkFileSize" @rejected="onRejectedLogo"
+          accept="image/*">
 
           <template v-slot:header="scope">
             <div class="row no-wrap items-center q-pa-sm q-gutter-xs glossy">
@@ -713,11 +790,11 @@
               <q-spinner v-if="uploadPercent" class="q-uploader__spinner" />
 
               <div class="col">
-                <div class="q-uploader__title">Insérer votre logo</div>
+                <div class="q-uploader__title">Logo de l'entreprise</div>
                 <div class="q-uploader__title">(Format : Image) / (Taille : < 5mo)</div>
                 </div>
 
-                <q-btn v-if="uploadPercent" :disabled="true" icon="add_box" round dense flat>
+                <q-btn v-if="uploadPercent" :disable="true" icon="add_box" round dense flat>
                 </q-btn>
 
                 <q-btn v-else type="a" icon="add_box"
@@ -741,7 +818,7 @@
 
                 <q-item-section class="text-left" style="display: flex;flex-direction: row;align-items: center;">
 
-                  <q-item-label>
+                  <q-item-label style="word-break: break-word;max-width: 235px;">
                     {{ file.name }}
                   </q-item-label>
 
@@ -760,26 +837,150 @@
 
         </q-uploader>
 
-        <q-input dense filled v-model="companies_name" label="Nom de l'entreprise *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <q-uploader class="w-100" lazy-rules :form-fields="[{ name: 'name', value: 'value' }]" color="light-blue-9"
+          dense filled style="margin-bottom:40px;" @added="kbisSelected" label="Kbis (Format : Pdf) / (Taille : < 5mo)"
+          :filter="checkFileSize" @rejected="onRejectedKbis" accept="application/pdf">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="title" />
+          <template v-slot:header="scope">
+            <div class="row no-wrap items-center q-pa-sm q-gutter-xs glossy">
+
+              <q-spinner v-if="uploadPercent2" class="q-uploader__spinner" />
+
+              <div class="col">
+                <div class="q-uploader__title">Kbis</div>
+                <div class="q-uploader__title">(Format : PDF) / (Taille : < 5mo)</div>
+                </div>
+
+                <q-btn v-if="uploadPercent2" :disable="true" icon="add_box" round dense flat>
+                </q-btn>
+
+                <q-btn v-else type="a" icon="add_box"
+                  @click="scope.pickFiles, scope.files.length = 0, validateKbis = false" round dense flat>
+                  <q-uploader-add-trigger />
+                </q-btn>
+
+              </div>
           </template>
 
-        </q-input>
+          <template v-slot:list="scope">
 
-        <q-input @keyup="getSiretEntreprise" mask="##-##-##-##-##-##-##" dense filled v-model="siret"
-          label="Numédo de siret *" lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !',
-          val => val && val.length > 14 || 'Votre nuùéro de siret doit comporter 14 chiffres !']">
+            <q-list separator>
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="dialpad" />
+              <q-item v-for="file in scope.files" :key="file.__key" style="flex-direction: column;">
+
+                <q-item-section v-if="file" class="q-mb-md"
+                  style="display: block;width:100%;height: 100%; margin-left: 0;padding-right: 0;" thumbnail>
+                  {{ file.path }}
+                </q-item-section>
+
+                <q-item-section class="text-left" style="display: flex;flex-direction: row;align-items: center;">
+
+                  <q-item-label style="word-break: break-word;max-width: 235px;">
+                    {{ file.name }}
+                  </q-item-label>
+
+                  <q-item-section style="align-items: flex-end;">
+                    <q-btn size="16px" color="red" flat dense round icon="delete"
+                      @click="scope.removeFile(file), scope.files.length = 0, validateLogo = false" />
+                  </q-item-section>
+
+                </q-item-section>
+
+              </q-item>
+
+            </q-list>
+
           </template>
 
-        </q-input>
+        </q-uploader>
 
-        <q-list bordered separator v-show="establishement" style="margin-bottom: 32px;">
+        <q-uploader class="w-100" lazy-rules :form-fields="[{ name: 'name', value: 'value' }]" multiple max-files="2"
+          color="light-blue-9" dense filled style="margin-bottom:40px;" @added="cniSelected"
+          label="Cni / Passeport (Format : Image) / (Taille : < 5mo)" :filter="checkFileSize" @rejected="onRejectedCni"
+          accept="image/*">
+
+          <template v-slot:header="scope">
+            <div class="row no-wrap items-center q-pa-sm q-gutter-xs glossy">
+
+              <q-spinner v-if="uploadPercent3" class="q-uploader__spinner" />
+
+              <div class="col">
+
+                <div class="q-uploader__title">Cni / Passeport (Recto / Verso)
+                </div>
+
+                <div class="q-uploader__title">(Format : Image) / (Taille : < 5mo)</div>
+                </div>
+
+                <q-btn v-if="uploadPercent3" :disable="true" icon="add_box" round dense flat>
+                </q-btn>
+
+                <q-btn v-else-if="scope.files.length < 2" type="a" icon="add_box"
+                  @click="scope.pickFiles, validateCni = false" round dense flat>
+                  <q-uploader-add-trigger />
+                </q-btn>
+
+              </div>
+          </template>
+
+          <template v-slot:list="scope">
+
+            <q-list separator>
+
+              <q-item v-for="file in scope.files" :key="file.__key" style="flex-direction: column;">
+
+                <q-item-section v-if="file.__img" class="q-mb-md"
+                  style="display: block;width:100%;height: 100%; margin-left: 0;padding-right: 0;" thumbnail>
+                  <img :src="file.__img.src" style="width: 140px;height: 100%;">
+                </q-item-section>
+
+                <q-item-section class="text-left" style="display: flex;flex-direction: row;align-items: center;">
+
+                  <q-item-label style="word-break: break-word;max-width: 235px;">
+                    {{ file.name }}
+                  </q-item-label>
+
+                  <q-item-section style="align-items: flex-end;">
+                    <q-btn size="16px" color="red" flat dense round icon="delete"
+                      @click="scope.removeFile(file), validateCni = false" />
+                  </q-item-section>
+
+                </q-item-section>
+
+              </q-item>
+
+            </q-list>
+
+          </template>
+
+        </q-uploader>
+
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="companies_name" label="Nom de l'entreprise *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+
+              <template v-slot:prepend>
+                <q-icon size="xs" name="title" />
+              </template>
+
+            </q-input>
+          </div>
+
+          <div class="col-6">
+            <q-input @keyup="getSiretEntreprise" mask="##-##-##-##-##-##-##" dense filled v-model="siret"
+              label="Numédo de siret *" lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !',
+              val => val && val.length > 14 || 'Votre nuùéro de siret doit comporter 14 chiffres !']">
+
+              <template v-slot:prepend>
+                <q-icon size="xs" name="dialpad" />
+              </template>
+
+            </q-input>
+          </div>
+        </div>
+
+        <q-list bordered separator v-show="establishement" style="margin-bottom: 16px;">
 
           <q-item v-for="establishements in establishementInfo">
 
@@ -791,7 +992,7 @@
               <q-item-label caption lines="1"><strong>Nom :</strong> {{ establishements.siege }}</q-item-label>
               <q-item-label caption lines="2"><strong>Siren :</strong> {{ establishements.siren }}</q-item-label>
               <q-item-label caption lines="3"><strong>Siret :</strong> {{ establishements.siret }}</q-item-label>
-              <q-item-label caption lines="4"><strong>Date de création :</strong> {{ establishements.foundung_date
+              <q-item-label caption lines="4"><strong>Date de création :</strong> {{ establishements.founding_date
                 }}</q-item-label>
               <q-item-label caption lines="5"><strong>Adresse : </strong>{{ establishements.adresse }}</q-item-label>
             </q-item-section>
@@ -811,23 +1012,29 @@
 
         </q-list>
 
-        <q-input dense filled mask="##-##-##-##-##" fill-mask v-model="phone_pro" label="Téléphone professionnel *"
-          lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled mask="##-##-##-##-##" fill-mask v-model="phone_pro" label="Téléphone professionnel *"
+              lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="phone" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="phone" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
-        <q-input dense filled mask="####" fill-mask v-model="counterEmploye" label="Nombre d'employés *" lazy-rules
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+          <div class="col-6 form-padding">
+            <q-input dense filled mask="####" fill-mask v-model="counterEmploye" label="Nombre d'employés *" lazy-rules
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="group" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="group" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+        </div>
 
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
           <q-btn size="xl" type="submit" v-ripple color="light-blue-9 glossy" style="max-width: 100px;" dense rounded
@@ -841,14 +1048,14 @@
   </transition>
 
   <!-- Register Choice Professionnelle 4/5 -->
-  <transition v-show="register4 && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="register4 && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div class="column text-center w-100">
+    <div class="column text-center w-100 form-w">
 
-      <q-form @submit="onSubmitRegister(4)" class="q-gutter-md q-mt-md">
+      <q-form @submit="onSubmitRegister(4)" class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Vos services ?</h5>
+        <h5 class="q-mt-md q-mb-md">Vos services</h5>
 
         <q-list bordered separator style="margin-bottom: 32px;">
 
@@ -883,38 +1090,44 @@
   </transition>
 
   <!-- Register Choice Professionnelle 5/5 -->
-  <transition v-show="register5 && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="register5 && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div class="column text-center w-100">
+    <div class="column text-center w-100 form-w">
 
-      <q-form @submit="onSubmitRegister(5)" class="q-gutter-md q-mt-md">
+      <q-form @submit="onSubmitRegister(5)" class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Données de connexion ?</h5>
+        <h5 class="q-mt-md q-mb-md">Données de connexion</h5>
 
-        <q-input dense filled v-model="email" label="Adresse email *" lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !',
-        (val, rules) => rules.email(val) || 'S\'il vous plaît, mettez une adresse email valide !']">
+        <div class="row row-form">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="email" label="Adresse email *" lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !',
+            (val, rules) => rules.email(val) || 'S\'il vous plaît, mettez une adresse email valide !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="email" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="email" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
 
-        <q-input dense filled v-model="password" id="current-password" name="current-password" label="Mot de passe *"
-          lazy-rules :type="isPwd ? 'password' : 'text'"
-          :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !', val => val && val.length > 7 || 'Votre mot de passe doit comporter au moins 8 caractères !']">
+          <div class="col-6 form-padding">
+            <q-input dense filled v-model="password" id="current-password" name="current-password"
+              label="Mot de passe *" lazy-rules :type="isPwd ? 'password' : 'text'"
+              :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !', val => val && val.length > 7 || 'Votre mot de passe doit comporter au moins 8 caractères !']">
 
-          <template v-slot:prepend>
-            <q-icon size="xs" name="password" />
-          </template>
+              <template v-slot:prepend>
+                <q-icon size="xs" name="password" />
+              </template>
 
-          <template v-slot:append>
-            <q-icon size="xs" :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-              @click="isPwd = !isPwd" />
-          </template>
+              <template v-slot:append>
+                <q-icon size="xs" :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                  @click="isPwd = !isPwd" />
+              </template>
 
-        </q-input>
+            </q-input>
+          </div>
+        </div>
 
         <q-toggle color="light-blue-9" class="q-mt-none text-left" style="margin-top: 16px" checked-icon="check"
           unchecked-icon="clear" keep-color v-model="accept"
@@ -932,10 +1145,10 @@
   </transition>
 
   <!-- Register Choice Professionnelle Paiement Licence -->
-  <transition v-show="paiement_pro && !isLoggedIn" appear enter-active-class="animated rollIn"
-    leave-active-class="animated rollOut">
+  <transition v-show="paiement_pro && !isLoggedIn" appear enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut">
 
-    <div class="column text-center w-100">
+    <div class="column text-center w-100 form-w q-mt-md">
 
       <h5 class="q-mt-md q-mb-md">Licence d'activation de l'application</h5>
 
@@ -960,7 +1173,7 @@
           </q-item-section>
 
           <q-item-section style="max-width: 40px;margin-left: 0;">
-            <q-btn :disabled="(active_cart === product_licence.id) ? true : false"
+            <q-btn :disable="(active_cart === product_licence.id) ? true : false"
               @click="addToCart(product_licence.id, product_licence.price_ht), active_cart = product_licence.id"
               v-ripple class="glossy" size="md" dense color="light-green-9">
               <q-icon size="16px" name="shopping_cart_checkout" />
@@ -996,7 +1209,7 @@
       </q-card>
 
       <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
-        <q-btn :disabled="(active_cart === 0) ? true : false" style="font-weight: 600;font-size: 16px;" size="xl"
+        <q-btn :disable="(active_cart === 0) ? true : false" style="font-weight: 600;font-size: 16px;" size="xl"
           @click="setStepPaiement" color="light-blue-9 glossy" v-ripple>Payer
           maintentant</q-btn>
       </div>
@@ -1009,6 +1222,33 @@
 
   </transition>
 
+  <q-dialog v-model="dialogPdf" persistent :maximized="maximizedToggle" transition-show="slide-up"
+    transition-hide="slide-down">
+
+    <q-card class="bg-light-9 text-white">
+      <q-bar>
+        <q-space />
+
+        <q-btn dense flat icon="minimize" @click="maximizedToggle = false" :disable="!maximizedToggle">
+          <q-tooltip v-if="maximizedToggle" class="bg-white text-primary">Minimize</q-tooltip>
+        </q-btn>
+        <q-btn dense flat icon="crop_square" @click="maximizedToggle = true" :disable="maximizedToggle">
+          <q-tooltip v-if="!maximizedToggle" class="bg-white text-primary">Maximize</q-tooltip>
+        </q-btn>
+        <q-btn dense flat icon="close" v-close-popup>
+          <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+        </q-btn>
+      </q-bar>
+
+      <q-card-section class="q-pt-none">
+
+        <iframe id="previewPdf"></iframe>
+
+      </q-card-section>
+    </q-card>
+
+  </q-dialog>
+
 </template>
 
 <script>
@@ -1016,7 +1256,7 @@
 import { SessionStorage, useQuasar } from 'quasar'
 import { defineComponent, onMounted, computed } from 'vue'
 import { ref } from 'vue'
-import moment from 'moment'
+import moment from 'moment/min/moment-with-locales';
 import axios from 'axios'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from 'stores/user'
@@ -1024,7 +1264,7 @@ import { useRouter } from "vue-router"
 
 moment.locale('fr')
 
-const logo = ref(true),
+const logo = ref(false),
   step = ref(1),
   choix = '',
   active = ref(false),
@@ -1041,20 +1281,20 @@ const logo = ref(true),
   register7 = ref(false),
   register8 = ref(false),
   paiement_pro = ref(false),
-  defaults = ref(true),
+  defaults = ref(false),
   login = ref(false),
-  loader = ref(false)
+  loader = ref(true)
 
 // Forms
-const email = ref('seigneurgaetan03@gmail.com'),
-  password = ref('@Zyfnnake256'),
-  lastname = ref('Seigneur'),
-  firstname = ref('Gaëtan'),
-  naissance = ref('23/04/1992'),
-  phone = ref('06-50-55-87-31'),
-  phone_pro = ref('02-43-27-89-89'),
+const email = ref(''),
+  password = ref(''),
+  lastname = ref(''),
+  firstname = ref(''),
+  naissance = ref(''),
+  phone = ref(''),
+  phone_pro = ref(''),
   isPwd = ref(true),
-  accept = ref(false),
+  accept = ref(true),
   civilite = ref('Mr'),
   siret = ref(''),
   establishement = ref(false),
@@ -1062,10 +1302,10 @@ const email = ref('seigneurgaetan03@gmail.com'),
   showAdresses = ref(false),
   loaderAdresse = ref(false),
   adresses = ref([]),
-  fonction = ref('Dev'),
-  adresse = ref('125 avenue Félix Geneslay'),
-  ville = ref('Le Mans'),
-  codepostal = ref('72100'),
+  fonction = ref(''),
+  adresse = ref(''),
+  ville = ref(''),
+  codepostal = ref(''),
   pays = ref([]),
   options = ref([]),
   services = ref([]),
@@ -1073,13 +1313,22 @@ const email = ref('seigneurgaetan03@gmail.com'),
   folderAPI = ref(process.env.API),
   toggleService = ref([]),
   validateLogo = ref(false),
+  validateKbis = ref(false),
+  validatePhoto = ref(false),
+  validateCni = ref(false),
   counterEmploye = ref('23'),
   user_type = ref(1),
   logo_establishement = ref(''),
-  companies_name = ref('Centre Services'),
-  validatePhoto = ref(false),
+  companies_name = ref(''),
   photo_user = ref(''),
-  uploadPercent = ref(false)
+  kbis_user = ref(''),
+  cni_passeport_user = ref(''),
+  cni_passeport_user2 = ref(''),
+  uploadPercent = ref(false),
+  uploadPercent2 = ref(false),
+  uploadPercent3 = ref(false),
+  maximizedToggle = ref(false),
+  dialogPdf = ref(false)
 
 // Cart
 const cart_ht = ref(0.00),
@@ -1112,7 +1361,20 @@ export default defineComponent({
     function onRejectedLogo (rejectedEntries) {
 
       $q.notify({
-        timeout: 1000,
+        timeout: 2000,
+        color: 'red-5',
+        textColor: 'white',
+        class: " glossy", icon: 'warning', message: 'Veuillez sélectionner un autre logo !',
+        progress: true,
+        classes: 'glossy',
+      })
+
+    }
+
+    function onRejectedCni (rejectedEntries) {
+
+      $q.notify({
+        timeout: 2000,
         color: 'red-5',
         textColor: 'white',
         class: " glossy", icon: 'warning', message: 'Veuillez sélectionner un autre logo !',
@@ -1125,7 +1387,7 @@ export default defineComponent({
     function onRejectedPhoto (rejectedEntries) {
 
       $q.notify({
-        timeout: 1000,
+        timeout: 2000,
         color: 'red-5',
         textColor: 'white',
         class: " glossy", icon: 'warning', message: 'Veuillez sélectionner une autre photo !',
@@ -1135,12 +1397,29 @@ export default defineComponent({
 
     }
 
+    function onRejectedKbis (rejectedEntries) {
+
+      $q.notify({
+        timeout: 2000,
+        color: 'red-5',
+        textColor: 'white',
+        class: " glossy", icon: 'warning', message: 'Veuillez sélectionner un autre fichier !',
+        progress: true,
+        classes: 'glossy',
+      })
+
+    }
+
     return {
+      dialogPdf,
+      maximizedToggle,
       user,
       isLoggedIn: isLoggedIn,
       checkFileSize,
       onRejectedLogo,
       onRejectedPhoto,
+      onRejectedKbis,
+      onRejectedCni,
       step,
       logoSelected (file) {
 
@@ -1149,7 +1428,7 @@ export default defineComponent({
         let formData = new
           FormData(); formData.append("file", file[0]); axios({
             method: "POST", url: folderAPI.value
-              + '/api/upload', data: formData, headers: { "Content-Type": "multipart/form-data" }
+              + '/api/companie/upload/logo', data: formData, headers: { "Content-Type": "multipart/form-data" }
           }).then(res => {
 
             if (res.data.succes) {
@@ -1159,7 +1438,7 @@ export default defineComponent({
               logo_establishement.value = res.data.logo
 
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'green-5',
                 textColor: 'white',
                 icon: 'cloud_done',
@@ -1169,7 +1448,7 @@ export default defineComponent({
               })
             } else {
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'red-5',
                 textColor: 'white',
 
@@ -1185,7 +1464,7 @@ export default defineComponent({
 
           }).catch(error => {
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -1217,7 +1496,7 @@ export default defineComponent({
               photo_user.value = res.data.photo
 
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'green-5',
                 textColor: 'white',
                 icon: 'cloud_done',
@@ -1227,7 +1506,7 @@ export default defineComponent({
               })
             } else {
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'red-5',
                 textColor: 'white',
 
@@ -1240,7 +1519,7 @@ export default defineComponent({
 
           }).catch(error => {
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -1255,6 +1534,126 @@ export default defineComponent({
             photo_user.value = ''
 
           })
+
+      },
+      kbisSelected (file) {
+
+        uploadPercent2.value = true
+
+        let formData = new
+          FormData(); formData.append("file", file[0]); axios({
+            method: "POST", url: folderAPI.value + '/api/companie/upload/kbis', data: formData, headers: { "Content-Type": "multipart/form-data" }
+          }).then(res => {
+
+            if (res.data.succes) {
+
+              uploadPercent2.value = false
+              validateKbis.value = true
+              kbis_user.value = res.data.pdf
+
+              $q.notify({
+                timeout: 2000,
+                color: 'green-5',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Votre document a été enregistré avec succès.',
+                progress: true,
+                classes: 'glossy',
+              })
+            } else {
+              $q.notify({
+                timeout: 2000,
+                color: 'red-5',
+                textColor: 'white',
+
+                icon: 'warning',
+                message: 'une erreur est survenue !',
+                progress: true,
+                classes: 'glossy',
+              })
+            }
+
+          }).catch(error => {
+            $q.notify({
+              timeout: 2000,
+              color: 'red-5',
+              textColor: 'white',
+
+              icon: 'warning',
+              message: 'une erreur est survenue !',
+              progress: true,
+              classes: 'glossy',
+            })
+
+            uploadPercent2.value = false
+            validateKbis.value = false
+            kbis_user.value = ''
+
+          })
+
+      },
+      cniSelected (file) {
+
+        uploadPercent3.value = true
+
+        let formData = new FormData();
+
+        formData.append("file", file[0]),
+          formData.append("file", file[1])
+
+        axios({
+          method: "POST", url: folderAPI.value + '/api/companie/upload/cni-passeport', data: formData, headers: { "Content-Type": "multipart/form-data" }
+        }).then(res => {
+
+          if (res.data.succes) {
+
+            uploadPercent3.value = false
+            validateCni.value = true
+            cni_passeport_user.value = res.data.image
+            cni_passeport_user2.value = res.data.image2
+
+            console.log(res.data);
+
+            $q.notify({
+              timeout: 2000,
+              color: 'green-5',
+              textColor: 'white',
+              icon: 'cloud_done',
+              message: 'Vos documents d\'identité ont bien été enregistré avec succès.',
+              progress: true,
+              classes: 'glossy',
+            })
+          } else {
+            $q.notify({
+              timeout: 2000,
+              color: 'red-5',
+              textColor: 'white',
+
+              icon: 'warning',
+              message: 'une erreur est survenue !',
+              progress: true,
+              classes: 'glossy',
+            })
+          }
+
+        }).catch(error => {
+          $q.notify({
+            timeout: 2000,
+            color: 'red-5',
+            textColor: 'white',
+
+            icon: 'warning',
+            message: 'une erreur est survenue !',
+            progress: true,
+            classes: 'glossy',
+          })
+
+          uploadPercent3.value = false
+          validateCni.value = false
+          cni_passeport_user.value = ''
+          cni_passeport_user2.value = ''
+
+        })
 
       },
       setStep (value) {
@@ -1339,10 +1738,13 @@ export default defineComponent({
             companies: {
               name: companies_name.value,
               employes: counterEmploye.value,
-              phone_pro: phone_pro.value,
+              phone_pro: String(phone_pro.value).replaceAll('-', ' '),
               services: toggleService.value,
               establishement: establishementInfo.value,
               logo: logo_establishement.value,
+              kbis: kbis_user.value,
+              cni_passeport: cni_passeport_user.value,
+              cni_passeport2: cni_passeport_user2.value
             }
           }
         ).then(res => {
@@ -1356,7 +1758,7 @@ export default defineComponent({
             paiement_pro.value = true
 
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -1376,7 +1778,7 @@ export default defineComponent({
         if (accept.value !== true) {
 
           $q.notify({
-            timeout: 1000,
+            timeout: 2000,
             color: 'red-5',
             textColor: 'white',
 
@@ -1426,7 +1828,7 @@ export default defineComponent({
                     SessionStorage.setItem('token', token)
 
                     $q.notify({
-                      timeout: 1000,
+                      timeout: 2000,
                       color: 'green-5',
                       textColor: 'white',
                       icon: 'cloud_done',
@@ -1451,7 +1853,7 @@ export default defineComponent({
                     }, 4000);
 
                     $q.notify({
-                      timeout: 1000,
+                      timeout: 2000,
                       color: 'red-5',
                       textColor: 'white',
 
@@ -1476,7 +1878,7 @@ export default defineComponent({
                   }, 4000);
 
                   $q.notify({
-                    timeout: 1000,
+                    timeout: 2000,
                     color: 'red-5',
                     textColor: 'white',
 
@@ -1505,7 +1907,7 @@ export default defineComponent({
             this.clickStep()
           } else {
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -1518,22 +1920,52 @@ export default defineComponent({
 
         } else if (value === 3) { // Professionnel
 
-          if (establishementInfo.value[0].active === true && validateLogo.value) {
+          if (establishementInfo.value[0].active === true && validateKbis.value && validateLogo.value && validateCni.value) {
 
             this.setStep('registerProfessionnelle4')
             this.clickStep()
 
           } else {
 
-            if (!validateLogo.value) {
+            if (!validateCni.value) {
 
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'red-5',
                 textColor: 'white',
 
                 icon: 'warning',
-                message: 'N\'oubliez pas d\'ajouter votre photo de profil !',
+                message: 'N\'oubliez pas d\'ajouter votre cni ou passeport !',
+                progress: true,
+                classes: 'glossy',
+              })
+
+            }
+
+            if (!validateKbis.value) {
+
+              $q.notify({
+                timeout: 2000,
+                color: 'red-5',
+                textColor: 'white',
+
+                icon: 'warning',
+                message: 'N\'oubliez pas d\'ajouter votre kbis !',
+                progress: true,
+                classes: 'glossy',
+              })
+
+            }
+
+            if (!validateLogo.value) {
+
+              $q.notify({
+                timeout: 2000,
+                color: 'red-5',
+                textColor: 'white',
+
+                icon: 'warning',
+                message: 'N\'oubliez pas d\'ajouter votre logo !',
                 progress: true,
                 classes: 'glossy',
               })
@@ -1543,7 +1975,7 @@ export default defineComponent({
             if (establishementInfo.value[0].active === false) {
 
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'red-5',
                 textColor: 'white',
 
@@ -1565,7 +1997,7 @@ export default defineComponent({
           if (accept.value !== true) {
 
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -1621,7 +2053,7 @@ export default defineComponent({
               if (res.data.succes) {
 
                 $q.notify({
-                  timeout: 1000,
+                  timeout: 2000,
                   color: 'green-5',
                   textColor: 'white',
                   icon: 'cloud_done',
@@ -1643,7 +2075,7 @@ export default defineComponent({
               } else {
 
                 $q.notify({
-                  timeout: 1000,
+                  timeout: 2000,
                   color: 'red-5',
                   textColor: 'white',
 
@@ -1669,7 +2101,7 @@ export default defineComponent({
             }).catch(error => {
 
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'red-5',
                 textColor: 'white',
 
@@ -1704,7 +2136,7 @@ export default defineComponent({
             this.clickStep()
           } else {
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -1720,7 +2152,7 @@ export default defineComponent({
           if (accept.value !== true) {
 
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -1780,7 +2212,7 @@ export default defineComponent({
                   if (res.data.succes) {
 
                     $q.notify({
-                      timeout: 1000,
+                      timeout: 2000,
                       color: 'green-5',
                       textColor: 'white',
                       icon: 'cloud_done',
@@ -1801,7 +2233,7 @@ export default defineComponent({
                   } else {
 
                     $q.notify({
-                      timeout: 1000,
+                      timeout: 2000,
                       color: 'red-5',
                       textColor: 'white',
 
@@ -1826,7 +2258,7 @@ export default defineComponent({
                 }).catch(error => {
 
                   $q.notify({
-                    timeout: 1000,
+                    timeout: 2000,
                     color: 'red-5',
                     textColor: 'white',
 
@@ -2052,7 +2484,7 @@ export default defineComponent({
                   showAdresses.value = false
 
                   // $q.notify({
-                  // timeout: 1000,
+                  // timeout: 2000,
                   // color: 'red-5',
                   // textColor: 'white',
                   //
@@ -2071,7 +2503,7 @@ export default defineComponent({
                 showAdresses.value = false
 
                 $q.notify({
-                  timeout: 1000,
+                  timeout: 2000,
                   color: 'red-5',
                   textColor: 'white',
 
@@ -2107,7 +2539,7 @@ export default defineComponent({
               establishementInfo.value = [{
                 'active': (res.data.etablissement.uniteLegale.etatAdministratifUniteLegale !== 'C') ? true : false,
                 'siege': res.data.etablissement.uniteLegale.denominationUniteLegale,
-                'foundung_date': moment(res.data.etablissement.dateCreationEtablissement).format('DD/MM/YYYY'),
+                'founding_date': moment(res.data.etablissement.dateCreationEtablissement).format('DD/MM/YYYY'),
                 'siret': res.data.etablissement.siret,
                 'siren': res.data.etablissement.siren,
                 'adresse': res.data.etablissement.adresseEtablissement.numeroVoieEtablissement + ' ' +
@@ -2130,7 +2562,7 @@ export default defineComponent({
               establishementInfo.value = []
 
               $q.notify({
-                timeout: 1000,
+                timeout: 2000,
                 color: 'red-5',
                 textColor: 'white',
 
@@ -2147,7 +2579,7 @@ export default defineComponent({
             establishementInfo.value
 
             $q.notify({
-              timeout: 1000,
+              timeout: 2000,
               color: 'red-5',
               textColor: 'white',
 
@@ -2208,8 +2640,13 @@ export default defineComponent({
       folderAPI,
       toggleService,
       validateLogo,
+      validateKbis,
+      validateCni,
       validatePhoto,
       photo_user,
+      kbis_user,
+      cni_passeport_user,
+      cni_passeport_user2,
       counterEmploye,
       logo_establishement,
       services,
@@ -2217,6 +2654,8 @@ export default defineComponent({
       user_type,
       companies_name,
       uploadPercent,
+      uploadPercent2,
+      uploadPercent3,
 
       cart_ht,
       cart_ttc,
@@ -2230,14 +2669,21 @@ export default defineComponent({
   },
   mounted () {
 
+    defaults.value = false
+    logo.value = false
+
+    setTimeout(() => {
+      loader.value = true
+    }, 1200);
+
     setTimeout(() => {
       loader.value = false
-    }, 1200);
+    }, 3500);
 
     setTimeout(() => {
       defaults.value = true
       logo.value = true
-    }, 2200);
+    }, 4000);
 
     if (this.connexionState) {
 
@@ -2249,6 +2695,10 @@ export default defineComponent({
           if (res.data.succes === true) {
 
             services.value = res.data.services
+
+          } else {
+
+            services.value = []
 
           }
 
@@ -2268,6 +2718,10 @@ export default defineComponent({
 
             options.value = res.data.pays
 
+          } else {
+
+            options.value = []
+
           }
 
         })
@@ -2279,6 +2733,10 @@ export default defineComponent({
           if (res.data.succes === true) {
 
             products_licences.value = res.data.licences
+
+          } else {
+
+            products_licences.value = []
 
           }
 

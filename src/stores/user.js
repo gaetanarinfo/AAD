@@ -6,6 +6,7 @@ export const useUserStore = defineStore('main', {
   state: () => ({
     stateUser: {
       user: null,
+      companie: null,
       token: null,
     },
   }),
@@ -24,6 +25,14 @@ export const useUserStore = defineStore('main', {
         return !!state.stateUser.token;
       } else {
         return state.stateUser.user;
+      }
+    },
+    companie: (state) => {
+
+      if (SessionStorage.getItem('token') === null) {
+        return !!state.stateUser.token;
+      } else {
+        return state.stateUser.companie;
       }
     },
   },
