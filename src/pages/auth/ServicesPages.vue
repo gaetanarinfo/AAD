@@ -34,7 +34,7 @@
     <transition v-show="services_show" appear enter-active-class="animated fadeIn"
       leave-active-class="animated fadeOut">
 
-      <div class="w-100 flex flex-center column">
+      <div class="w-100 flex flex-center column" style="margin-bottom: 50px;">
 
         <h5 class="text-center" style="margin-bottom: 1rem;margin-top: 1rem;">Mes prestations</h5>
 
@@ -71,6 +71,8 @@
 
     </transition>
 
+    <FooterComponent />
+
   </q-page>
 
 </template>
@@ -84,6 +86,7 @@ import { useRouter } from "vue-router"
 import { SessionStorage, useQuasar } from 'quasar'
 import { ref } from 'vue'
 import axios from 'axios'
+import FooterComponent from 'components/Footer.vue'
 
 const connexionState = ref(true),
   services = ref([]),
@@ -96,6 +99,7 @@ const connexionState = ref(true),
 export default defineComponent({
   name: 'ServicesPages',
   components: {
+    FooterComponent
   },
   setup () {
 

@@ -1,4 +1,4 @@
-<template name="EmployeePages">
+<template name="AccountingPages">
 
   <q-page :class="(!connexionState) ? 'disabled q-page q-page-start' : 'q-page q-page-start'" :style-fn="heightAuto">
 
@@ -7,17 +7,7 @@
       leave-active-class="animated fadeOut">
       <div class="w-100 flex flex-center column form-w">
 
-        <q-img src="~assets/logo.png" spinner-color="light-blue-9" style="max-width: 150px; min-height: 150px"
-          alt="AAD - Services à la personne"></q-img>
-
-        <div class="wrapper">
-          <div class="line"></div>
-          <h1 class="title text-center">
-            AAD
-          </h1>
-          <div class="line"></div>
-        </div>
-        <p class="title">Services à la personne</p>
+        <q-img src="~assets/12291247.svg" spinner-color="light-blue-9" alt="AAD - Services à la personne"></q-img>
 
       </div>
     </transition>
@@ -31,12 +21,50 @@
 
     </transition>
 
-    <transition v-show="users_show" appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+    <transition v-show="accounting_show" appear enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut">
 
-      <div class="w-100 flex flex-center column" style="margin-bottom: 30px;">
+      <div class="w-100 flex flex-center column" style="margin-bottom: 50px;">
 
-        <h5 class="text-center" style="margin-top: 1rem;margin-bottom: 2rem;">Gestion des employés
-        </h5>
+        <h5 class="text-center" style="margin-top: 1rem;margin-bottom: 1rem;">Comptabilité pour l'année {{
+          moment().format('YYYY') }}</h5>
+
+        <q-card class="w-100 q-mb-xl">
+
+          <q-tabs id="tab-accounting" v-model="tab" class="bg-light-blue-9 glossy text-white" align="justify"
+            narrow-indicator>
+
+            <q-tab name="mails" label="Valider" style="font-weight: 600;" />
+            <q-tab name="alarms" label="En attente" class="text-weight-bold" />
+
+          </q-tabs>
+
+          <q-separator />
+
+          <q-tab-panels v-model="tab" animated class="text-dark text-left">
+
+            <q-tab-panel name="mails" class="text-dark">
+
+              <div class="text-h6">Transactions Mollie</div>
+
+              <strong>{{ accounting_availableamount }} €</strong>
+
+            </q-tab-panel>
+
+            <q-tab-panel name="alarms" class="text-dark">
+
+              <div class="text-h6">Transactions Mollie</div>
+
+              <strong>{{ accounting_pendingamount }} €</strong>
+
+            </q-tab-panel>
+
+          </q-tab-panels>
+
+        </q-card>
+
+        <h5 class="text-center" style="margin-top: 1rem;margin-bottom: 2rem;">Transactions pour l'année {{
+          moment().format('YYYY') }}</h5>
 
         <div class="w-100 text-right">
 
@@ -70,43 +98,6 @@
               <q-inner-loading showing color="light-blue-9" />
             </template>
 
-            <template v-slot:body="props">
-
-              <q-tr :props="props">
-
-                <q-td key="type" :props="props">
-                  <strong>{{ props.row.type }}</strong>
-                </q-td>
-
-                <q-td key="lastname" :props="props">
-                  {{ props.row.lastname }}
-                </q-td>
-
-                <q-td key="firstname" :props="props">
-                  {{ props.row.firstname }}
-                </q-td>
-
-                <q-td key="email" :props="props">
-                  {{ props.row.email }}
-                </q-td>
-
-                <q-td key="created_at" :props="props">
-                  {{ props.row.created_at }}
-                </q-td>
-
-                <q-td key="actions" :props="props" style="text-align: center;">
-                  <q-btn v-ripple flat dense round
-                    @click="refundOrder('tr_' + props.row.id, moment(props.row.created).format('YYYY-MM-DD'))">
-                    <q-icon name="refresh" color="red-9" />
-                    <q-tooltip anchor="center left" self="center right" :offset="[10, 10]"
-                      class="glossy bg-light-blue-9 text-weight-bold">Rembourser la commande</q-tooltip>
-                  </q-btn>
-                </q-td>
-
-              </q-tr>
-
-            </template>
-
             <template v-slot:pagination="scope">
 
               <q-btn v-if="scope.pagesNumber > 2" icon="first_page" color="grey-8" round dense flat
@@ -131,6 +122,8 @@
 
     </transition>
 
+    <FooterComponent />
+
   </q-page>
 
 </template>
@@ -145,6 +138,7 @@ import { SessionStorage, useQuasar, exportFile } from 'quasar'
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import moment from 'moment/min/moment-with-locales';
+import FooterComponent from 'components/Footer.vue'
 
 moment.locale('fr')
 
@@ -152,20 +146,22 @@ const connexionState = ref(true),
   folderAPI = ref(process.env.API),
   logo = ref(false),
   loader = ref(true),
-  users_show = ref(false),
-  users = ref([]),
+  companie = ref([]),
   user = ref([]),
+  accounting = ref([]),
+  accounting_show = ref(false),
+  tab = ref('mails'),
+  accounting_pendingamount = ref(''),
+  accounting_availableamount = ref(''),
   filter = ref(''),
   loading = ref(false),
   changeMode = ref(false)
 
 const columns = [
-  { name: 'type', label: 'Statut', align: 'left', field: 'type', sortable: true, headerClasses: 'header-table' },
-  { name: 'lastname', label: 'Nom', align: 'left', field: 'lastname', sortable: true, headerClasses: 'header-table' },
-  { name: 'firstname', label: 'Prénom', align: 'left', field: 'firstname', sortable: true, headerClasses: 'header-table' },
-  { name: 'email', label: 'Email', align: 'left', field: 'email', sortable: true, headerClasses: 'header-table' },
-  { name: 'created_at', label: 'Inscrit le', align: 'left', field: 'created_at', sortable: true, headerClasses: 'header-table' },
-  { name: 'actions', label: 'Actions', align: 'center', field: 'actions', sortable: false, headerClasses: 'header-table' },
+  { name: 'type', label: 'Type', align: 'left', field: 'type', sortable: true, headerClasses: 'header-table' },
+  { name: 'montant_initial', label: 'Montant initial', align: 'left', field: 'montant_initial', sortable: true, headerClasses: 'header-table' },
+  { name: 'frais', label: 'Frais', field: 'frais', align: 'left', sortable: true, headerClasses: 'header-table' },
+  { name: 'created_at', label: 'Créée le', align: 'left', field: 'created_at', headerClasses: 'header-table' },
 ]
 
 const rows = ref([])
@@ -199,8 +195,9 @@ const pagination = ref({
 })
 
 export default defineComponent({
-  name: 'MyAccountCompaniePage',
+  name: 'AccountingPages',
   components: {
+    FooterComponent
   },
   setup () {
 
@@ -220,41 +217,43 @@ export default defineComponent({
     if (connexionState.value && isLoggedIn.value) {
 
       user.value = userStore.stateUser.user
-      loading.value = true
 
       if (user.value.user_type === 2) {
+        companie.value = userStore.stateUser.companie
 
-        users.value = []
+        loading.value = true
+        accounting.value = []
         rows.value = []
 
-        axios.get(process.env.API + '/api/companie/users/' + userStore.stateUser.companie.id)
+        axios.get(process.env.API + '/api/companie/accounting/' + userStore.stateUser.companie.id)
           .then(res => {
 
             if (res.data.succes) {
 
-              users.value = res.data.users
+              accounting.value = res.data.accounting
+              accounting_pendingamount.value = accounting.value.pendingAmount.value
+              accounting_availableamount.value = accounting.value.availableAmount.value
 
-              if (res.data.users.length >= 1) {
+              if (res.data.balance_transactions.count >= 1) {
 
-                users.value.forEach(element => {
+                accounting.value.forEach(element => {
 
-                  rows.value.push(
+                  rows.push(
                     {
-                      type: element.name,
-                      lastname: element.lastname,
-                      firstname: element.firstname,
-                      email: element.email,
-                      created_at: moment(element.created_at).format('DD MMMM YYYY'),
+                      type: element.type,
+                      montant_initial: element.initialAmount.value,
+                      frais: element.deductions.value,
+                      created_at: element.createdAt
                     })
 
-                });
+                  loading.value = false
 
-                loading.value = false
+                });
 
               } else {
 
                 rows.value = []
-                users.value = []
+                accounting.value = []
                 loading.value = false
 
               }
@@ -262,7 +261,7 @@ export default defineComponent({
             } else {
 
               rows.value = []
-              users.value = []
+              accounting.value = []
               loading.value = false
 
             }
@@ -276,18 +275,23 @@ export default defineComponent({
     return {
       loading,
       filter,
-      users,
       changeMode,
       pagination,
+      accounting_availableamount,
+      accounting_pendingamount,
+      tab,
+      accounting_show,
+      accounting,
       moment: moment,
       user,
+      companie,
       loader,
       logo,
       isLoggedIn,
       onLine: navigator.onLine,
       connexionState,
-      users_show,
       folderAPI,
+
       columns,
       rows,
 
@@ -310,6 +314,7 @@ export default defineComponent({
         )
 
         if (status !== true) {
+
           $q.notify({
             timeout: 2000,
             color: 'red-5',
@@ -320,6 +325,7 @@ export default defineComponent({
             progress: true,
             classes: 'glossy',
           })
+
         }
       },
 
@@ -358,7 +364,7 @@ export default defineComponent({
     const userStore = useUserStore()
     const { isLoggedIn } = storeToRefs(userStore)
 
-    users_show.value = false
+    accounting_show.value = false
     logo.value = false
 
     setTimeout(() => {
@@ -370,8 +376,8 @@ export default defineComponent({
     }, 3500);
 
     setTimeout(() => {
-      users_show.value = true
       logo.value = true
+      accounting_show.value = true
     }, 4000);
 
     window.addEventListener('online', this.updateOnlineStatus)

@@ -7,17 +7,7 @@
       leave-active-class="animated fadeOut">
       <div class="w-100 flex flex-center column form-w">
 
-        <q-img src="~assets/logo.png" spinner-color="light-blue-9" style="max-width: 150px; min-height: 150px"
-          alt="AAD - Services à la personne"></q-img>
-
-        <div class="wrapper">
-          <div class="line"></div>
-          <h1 class="title text-center">
-            AAD
-          </h1>
-          <div class="line"></div>
-        </div>
-        <p class="title">Services à la personne</p>
+        <q-img src="~assets/12291247.svg" spinner-color="light-blue-9" alt="AAD - Services à la personne"></q-img>
 
       </div>
     </transition>
@@ -34,9 +24,9 @@
     <transition v-show="companie_show" appear enter-active-class="animated fadeIn"
       leave-active-class="animated fadeOut">
 
-      <div class="w-100 flex flex-center column">
+      <div class="w-100 flex flex-center column" style="margin-bottom: 50px;">
 
-        <h5 class="text-center" style="margin-top: 1rem;margin-bottom: 2rem;">Gérer mon entreprise
+        <h5 class="text-center" style="margin-top: 1rem;margin-bottom: 1rem;">Mon entreprise
         </h5>
 
         <p style="margin-bottom: 2rem;text-transform: initial; letter-spacing: normal;font-size: 16px;"
@@ -434,6 +424,8 @@
 
     </transition>
 
+    <FooterComponent />
+
   </q-page>
 
 </template>
@@ -448,6 +440,7 @@ import { SessionStorage, useQuasar } from 'quasar'
 import { ref } from 'vue'
 import axios from 'axios'
 import moment from 'moment/min/moment-with-locales';
+import FooterComponent from 'components/Footer.vue'
 
 moment.locale('fr')
 
@@ -475,6 +468,7 @@ const name_editable = ref(''),
 export default defineComponent({
   name: 'MyAccountCompaniePage',
   components: {
+    FooterComponent
   },
   setup () {
 

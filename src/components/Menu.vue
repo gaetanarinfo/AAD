@@ -1,6 +1,6 @@
 <template name="MenuComponent">
   <q-item v-if="enable" clickable v-ripple tag="a" target="_blank" :href="link">
-    <q-item-section v-if="icon" avatar>
+    <q-item-section v-if="icon" avatar style="padding-left: 12px;">
       <q-icon :class="icon" :color="color" />
     </q-item-section>
 
@@ -10,8 +10,8 @@
   </q-item>
 
   <q-item v-else clickable v-ripple @click="this.$router.push(link)">
-    <q-item-section v-if="icon" avatar>
-      <q-icon :class="icon" :color="color" />
+    <q-item-section v-if="icon" avatar style="padding-left: 12px;">
+      <q-icon :class="icon" :style="'color: ' + color" />
     </q-item-section>
 
     <q-item-section>

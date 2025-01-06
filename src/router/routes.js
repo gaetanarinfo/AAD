@@ -10,6 +10,10 @@ const routes = [
         component: () => import('src/pages/auth/MyAccountPage.vue'),
       },
       {
+        path: '/my-account/inbox',
+        component: () => import('src/pages/auth/InboxPage.vue'),
+      },
+      {
         path: '/companie',
         component: () => import('src/pages/auth/MyAccountCompaniePage.vue'),
       },
@@ -19,7 +23,7 @@ const routes = [
       },
       {
         path: '/companie/accounting',
-        component: () => import('src/pages/auth/AccountingPages.vue'),
+        component: () => import('src/pages/auth/AccountingPage.vue'),
       },
       {
         path: '/companie/orders',
@@ -27,7 +31,15 @@ const routes = [
       },
       {
         path: '/companie/users',
-        component: () => import('src/pages/auth/EmployeePages.vue'),
+        component: () => import('src/pages/auth/EmployeePage.vue'),
+      },
+      {
+        path: '/companie/users/edit/:companieId/:email',
+        component: () => import('src/pages/auth/EmployeeEditPage.vue'),
+      },
+      {
+        path: '/companie/documents',
+        component: () => import('src/pages/auth/DocumentsPage.vue'),
       },
       {
         path: '/politique-confidentialite',

@@ -4,16 +4,50 @@
 
     <q-tabs no-caps active-color="white" indicator-color="transparent" v-model="tab">
 
-      <q-tab :disable="(tab === 'home') ? true : false" name="home" v-ripple>
-        <q-icon name="home" size="md" />
+      <q-tab :disable="(pageActuel === '') ? true : false" @click="this.$router.push('/')" name="home" v-ripple>
+        <q-icon name="home" size="sm" />
       </q-tab>
 
-      <q-tab :disable="(tab === 'add_prestation') ? true : false" name="add_prestation" v-ripple>
-        <q-icon name="add" size="md" />
+      <q-tab :disable="(pageActuel === 'add_prestation') ? true : false" name="add_prestation" v-ripple>
+        <q-icon name="add" size="sm" />
       </q-tab>
 
-      <q-tab :disable="(tab === 'list_prestations') ? true : false" name="list_prestations" v-ripple>
-        <q-icon name="list_alt" size="md" />
+      <q-tab :disable="(pageActuel === 'list_prestations') ? true : false" name="list_prestations" v-ripple>
+        <q-icon name="list_alt" size="sm" />
+      </q-tab>
+
+      <q-tab :disable="(pageActuel === 'myaccountinbox') ? true : false" @click="this.$router.push('/my-account/inbox')"
+        name="mail" v-ripple>
+        <q-icon v-if="pageActuel !== 'myaccountinbox'" name="mail" size="sm" />
+        <q-icon v-else name="drafts" size="sm" />
+      </q-tab>
+
+      <q-tab :disable="(pageActuel === 'contact') ? true : false" @click="this.$router.push('/contact')" name="contact"
+        v-ripple>
+        <q-icon name="chat" size="sm" />
+      </q-tab>
+
+    </q-tabs>
+
+  </q-footer>
+
+  <q-footer v-if="isLoggedIn && user.user_type >= 2" bordered class="bg-light-blue-9 glossy text-white">
+
+    <q-tabs no-caps active-color="white" indicator-color="transparent" v-model="tab">
+
+      <q-tab :disable="(pageActuel === '') ? true : false" @click="this.$router.push('/')" name="home" v-ripple>
+        <q-icon name="home" size="sm" />
+      </q-tab>
+
+      <q-tab :disable="(pageActuel === 'myaccountinbox') ? true : false" @click="this.$router.push('/my-account/inbox')"
+        name="mail" v-ripple>
+        <q-icon v-if="pageActuel !== 'myaccountinbox'" name="mail" size="sm" />
+        <q-icon v-else name="drafts" size="sm" />
+      </q-tab>
+
+      <q-tab :disable="(pageActuel === 'contact') ? true : false" @click="this.$router.push('/contact')" name="contact"
+        v-ripple>
+        <q-icon name="chat" size="sm" />
       </q-tab>
 
     </q-tabs>
@@ -25,21 +59,27 @@
 <script>
 import { defineComponent } from 'vue'
 import { SessionStorage, useQuasar } from 'quasar'
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from 'stores/user'
 
-const tab = ref('')
+const tab = ref(''),
+  pageActuel = ref('')
 
 export default defineComponent({
   name: 'FooterComponent',
   setup () {
 
     const $q = useQuasar()
+    const router = useRouter()
     const userStore = useUserStore()
     const { isLoggedIn, user } = storeToRefs(userStore)
 
+    pageActuel.value = String(router.currentRoute.value.href).replaceAll('/', '').replaceAll('-', '')
+
     return {
+      pageActuel,
       user,
       isLoggedIn: isLoggedIn,
       tab,

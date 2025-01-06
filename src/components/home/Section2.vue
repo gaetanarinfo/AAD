@@ -5,7 +5,7 @@
 
     <div class="column text-center w-100">
 
-      <h5 class="q-mt-md q-mb-md">Mes dernières demandes de service</h5>
+      <h5 class="q-mt-md q-mb-md">Mes demandes de prestation</h5>
 
       <q-list v-if="services.length >= 1" style="min-width: 300px; text-align: left;" bordered separator>
 
@@ -26,7 +26,7 @@
         <q-icon size="xl" name="warning" class="text-orange-9 q-mb-md" /> <span class="text-bold"
           style="font-size: 16px;">Vous n'avez aucune
           demande de
-          service
+          prestation
           pour le moment !</span>
       </q-item>
 

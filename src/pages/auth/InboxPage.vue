@@ -1,53 +1,21 @@
-<template name="404Page">
+<template name="InboxPage">
 
   <q-page :class="(!connexionState) ? 'disabled q-page q-page-start' : 'q-page q-page-start'" :style-fn="heightAuto">
 
-    <!-- Loader -->
-    <transition v-show="loader" appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-
-      <div class="column flex-center" style="min-height: calc(100vh - 50px); height: 100%;">
-        <q-spinner-tail size="50px" color="light-blue-9" />
-      </div>
-
-    </transition>
-
-    <transition v-show="bloc_show" appear enter-active-class="animated fadeIn"
-      style="margin-top: 30px;margin-bottom: 90px;;" leave-active-class="animated fadeOut">
-
-      <div class="w-100 flex flex-center column">
-
-        <h1 class="h1 text-center">404</h1>
-
-        <h2 class="h2">Nous ne trouvons pas cette page</h2>
-
-        <q-img spinner-color="light-blue-9" style="max-width: 350px;margin-bottom: 2rem;" src="~assets/404.avif" />
-
-        <p class="p">Nous sommes presque sûrs que cette page se trouvait ici, mais elle semble avoir disparu. Nous nous
-          excusons
-          pour cela.</p>
-
-        <q-btn @click="this.$router.push('/')" padding="md" v-ripple color="light-blue-9"
-          style="font-weight: 600;min-width: 200px;font-size: 18px;" glossy dense size="md">Accueil</q-btn>
-
-      </div>
-
-    </transition>
+    <FooterComponent />
 
   </q-page>
 
 </template>
 
-
 <script>
 
 import { defineComponent } from 'vue'
-import { useUserStore } from 'stores/user'
-import { storeToRefs } from 'pinia'
-import { useRouter } from "vue-router"
-import { SessionStorage, useQuasar, exportFile } from 'quasar'
+import { useQuasar } from 'quasar'
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import moment from 'moment/min/moment-with-locales';
+import FooterComponent from 'components/Footer.vue'
 
 moment.locale('fr')
 
@@ -58,13 +26,12 @@ const connexionState = ref(true),
   bloc_show = ref(false)
 
 export default defineComponent({
-  name: '404Page',
+  name: 'InboxtPage',
   components: {
+    FooterComponent
   },
   setup () {
 
-    const userStore = useUserStore()
-    const router = useRouter()
     const $q = useQuasar()
 
     return {

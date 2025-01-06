@@ -1,7 +1,7 @@
 <template name="Section1Component">
 
   <!-- Logo -->
-  <transition v-show="logo" appear enter-active-class="animated fadeIn"
+  <transition v-if="!isLoggedIn" v-show="logo" appear enter-active-class="animated fadeIn"
     :style="(register2 || register2_2 || register3 || register4 || register5 || register6 || register7 || register8 || paiement_pro) ? 'margin-top: 30px;' : ''"
     leave-active-class="animated fadeOut">
     <div class="w-100 flex flex-center column form-w">
@@ -21,6 +21,16 @@
     </div>
   </transition>
 
+  <transition v-else v-show="logo" appear enter-active-class="animated fadeIn"
+    :style="(register2 || register2_2 || register3 || register4 || register5 || register6 || register7 || register8 || paiement_pro) ? 'margin-top: 30px;' : ''"
+    leave-active-class="animated fadeOut">
+
+    <div class="w-100 flex flex-center column form-w">
+      <q-img src="~assets/42105457_8916293.svg" alt="AAD - Services à la personne" spinner-color="light-blue-9" />
+    </div>
+
+  </transition>
+
   <!-- Loader -->
   <transition v-show="loader" appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
 
@@ -38,24 +48,42 @@
 
       <div class="q-mt-md">
 
-        <h5 class="q-mt-md q-mb-md">Disposez-vous d'un compte ?</h5>
+        <h5 class="q-mt-md q-mb-md">Bienvenue</h5>
 
-        <q-list style="text-align: left;" bordered separator>
-          <q-item clickable v-ripple :active="active" @click="setStep('register')"
+        <q-list style="text-align: left;">
+
+          <q-item style="padding-bottom: 1rem;padding-top: 1rem;border-radius: 6px;" clickable v-ripple
+            :class="(!active) ? 'bg-grey-3 q-mb-md' : 'q-mb-md'" :active="active" @click="setStep('register')"
             active-class="bg-light-blue-9 glossy text-white">
+
             <q-item-section avatar>
               <q-icon name="check" />
             </q-item-section>
+
             <q-item-section>Je créer mon compte</q-item-section>
+
+            <q-item-section style="justify-content: flex-start;" avatar>
+              <q-icon color="light-blue-9" name="keyboard_arrow_right" />
+            </q-item-section>
+
           </q-item>
 
-          <q-item clickable v-ripple :active="active2" @click="setStep('login')"
+          <q-item style="padding-bottom: 1rem;padding-top: 1rem;border-radius: 6px;" clickable v-ripple
+            :class="(!active2) ? 'bg-grey-3 q-mb-md' : 'q-mb-md'" :active="active2" @click="setStep('login')"
             active-class="bg-light-blue-9 glossy text-white">
+
             <q-item-section avatar>
               <q-icon name="login" />
             </q-item-section>
+
             <q-item-section>Je me connecte</q-item-section>
+
+            <q-item-section style="justify-content: flex-start;" avatar>
+              <q-icon color="light-blue-9" name="keyboard_arrow_right" />
+            </q-item-section>
+
           </q-item>
+
         </q-list>
 
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
@@ -106,7 +134,13 @@
           </q-input>
 
           <q-toggle color="light-blue-9" class="text-left" checked-icon="check" unchecked-icon="clear" keep-color
-            v-model="accept" style="margin-top: 16px" label="Je suis d'accord avec la licence et les conditions" />
+            v-model="accept" style="margin-top: 16px">
+
+            <span>Je suis d'accord avec la <a @click="this.$router.push('/cgu')"
+                style="text-decoration:underline">licence et les
+                conditions</a></span>
+
+          </q-toggle>
 
           <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
             <q-btn size="xl" type="submit" v-ripple color="light-blue-9 glossy" style="max-width: 100px;" dense rounded
@@ -131,22 +165,40 @@
 
         <h5 class="q-mt-md q-mb-md">Êtes-vous ?</h5>
 
-        <q-list style="text-align: left;" bordered separator>
-          <q-item clickable v-ripple :active="active" @click="setStep('registerParticulier')"
-            active-class="bg-light-blue-9 glossy text-white">
+        <q-list style="text-align: left;">
+
+          <q-item style="padding-bottom: 1rem;padding-top: 1rem;border-radius: 6px;" clickable v-ripple
+            :class="(!active) ? 'bg-grey-3 q-mb-md' : 'q-mb-md'" :active="active"
+            @click="setStep('registerParticulier')" active-class="bg-light-blue-9 glossy text-white">
+
             <q-item-section avatar>
               <q-icon name="account_circle" />
             </q-item-section>
+
             <q-item-section>Un particulier</q-item-section>
+
+            <q-item-section style="justify-content: flex-start;" avatar>
+              <q-icon color="light-blue-9" name="keyboard_arrow_right" />
+            </q-item-section>
+
           </q-item>
 
-          <q-item clickable v-ripple :active="active2" @click="setStep('registerProfessionnelle')"
-            active-class="bg-light-blue-9 glossy text-white">
+          <q-item style="padding-bottom: 1rem;padding-top: 1rem;border-radius: 6px;" clickable v-ripple
+            :class="(!active2) ? 'bg-grey-3 q-mb-md' : 'q-mb-md'" :active="active2"
+            @click="setStep('registerProfessionnelle')" active-class="bg-light-blue-9 glossy text-white">
+
             <q-item-section avatar>
               <q-icon name="webhook" />
             </q-item-section>
+
             <q-item-section>Une entreprise</q-item-section>
+
+            <q-item-section style="justify-content: flex-start;" avatar>
+              <q-icon color="light-blue-9" name="keyboard_arrow_right" />
+            </q-item-section>
+
           </q-item>
+
         </q-list>
 
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
@@ -170,15 +222,19 @@
 
         <h5 class="q-mt-md q-mb-md">Données personnelles</h5>
 
-        <div class="flex-start row items-center" style="margin-bottom: 16px;">
+        <div class="flex-start column items-center" style="margin-bottom: 16px;">
 
-          <q-item-label>Civilité :</q-item-label>
+          <q-item-label class="text-weight-bold">Civilité :</q-item-label>
 
-          <q-radio v-model="civilite" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
-            val="Mr" label="Mr" />
+          <div class="flex-start row items-start">
 
-          <q-radio v-model="civilite" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
-            val="Mme" label="Mme" />
+            <q-radio v-model="civilite" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
+              val="Mr" label="Mr" />
+
+            <q-radio v-model="civilite" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
+              val="Mme" label="Mme" />
+
+          </div>
 
         </div>
 
@@ -397,7 +453,13 @@
         </div>
 
         <q-toggle color="light-blue-9" class="q-mt-none text-left" checked-icon="check" unchecked-icon="clear"
-          keep-color v-model="accept" label="Je suis d'accord avec la licence et les conditions" />
+          keep-color v-model="accept">
+
+          <span>Je suis d'accord avec la <a @click="this.$router.push('/cgu')" style="text-decoration:underline">licence
+              et les
+              conditions</a></span>
+
+        </q-toggle>
 
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
           <q-btn size="xl" type="submit" v-ripple color="light-blue-9 glossy" style="max-width: 100px;" dense rounded
@@ -498,15 +560,19 @@
 
         <h5 class="q-mt-md q-mb-md">Données personnelles</h5>
 
-        <div class="flex-start row items-center" style="margin-bottom: 16px;">
+        <div class="flex-start column items-center" style="margin-bottom: 16px;">
 
-          <q-item-label>Civilité :</q-item-label>
+          <q-item-label class="text-weight-bold">Civilité :</q-item-label>
 
-          <q-radio v-model="civilite" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
-            val="Mr" label="Mr" />
+          <div class="flex-start row items-start">
 
-          <q-radio v-model="civilite" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
-            val="Mme" label="Mme" />
+            <q-radio v-model="civilite" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
+              val="Mr" label="Mr" />
+
+            <q-radio v-model="civilite" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
+              val="Mme" label="Mme" />
+
+          </div>
 
         </div>
 
@@ -1025,7 +1091,7 @@
           </div>
 
           <div class="col-6 form-padding">
-            <q-input dense filled mask="####" fill-mask v-model="counterEmploye" label="Nombre d'employés *" lazy-rules
+            <q-input dense filled fill-mask v-model="counterEmploye" label="Nombre d'employés *" lazy-rules
               :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
 
               <template v-slot:prepend>
@@ -1130,8 +1196,13 @@
         </div>
 
         <q-toggle color="light-blue-9" class="q-mt-none text-left" style="margin-top: 16px" checked-icon="check"
-          unchecked-icon="clear" keep-color v-model="accept"
-          label="Je suis d'accord avec la licence et les conditions" />
+          unchecked-icon="clear" keep-color v-model="accept">
+
+          <span>Je suis d'accord avec la <a @click="this.$router.push('/cgu')" style="text-decoration:underline">licence
+              et les
+              conditions</a></span>
+
+        </q-toggle>
 
         <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
           <q-btn size="xl" type="submit" v-ripple color="light-blue-9 glossy" style="max-width: 100px;" dense rounded
@@ -1316,7 +1387,7 @@ const email = ref(''),
   validateKbis = ref(false),
   validatePhoto = ref(false),
   validateCni = ref(false),
-  counterEmploye = ref('23'),
+  counterEmploye = ref(''),
   user_type = ref(1),
   logo_establishement = ref(''),
   companies_name = ref(''),
@@ -1453,7 +1524,7 @@ export default defineComponent({
                 textColor: 'white',
 
                 icon: 'warning',
-                message: 'une erreur est survenue !',
+                message: 'Une erreur est survenue !',
                 progress: true,
                 classes: 'glossy',
               })
@@ -1469,7 +1540,7 @@ export default defineComponent({
               textColor: 'white',
 
               icon: 'warning',
-              message: 'une erreur est survenue !',
+              message: 'Une erreur est survenue !',
               progress: true,
               classes: 'glossy',
             })
@@ -1511,7 +1582,7 @@ export default defineComponent({
                 textColor: 'white',
 
                 icon: 'warning',
-                message: 'une erreur est survenue !',
+                message: 'Une erreur est survenue !',
                 progress: true,
                 classes: 'glossy',
               })
@@ -1524,7 +1595,7 @@ export default defineComponent({
               textColor: 'white',
 
               icon: 'warning',
-              message: 'une erreur est survenue !',
+              message: 'Une erreur est survenue !',
               progress: true,
               classes: 'glossy',
             })
@@ -1567,7 +1638,7 @@ export default defineComponent({
                 textColor: 'white',
 
                 icon: 'warning',
-                message: 'une erreur est survenue !',
+                message: 'Une erreur est survenue !',
                 progress: true,
                 classes: 'glossy',
               })
@@ -1580,7 +1651,7 @@ export default defineComponent({
               textColor: 'white',
 
               icon: 'warning',
-              message: 'une erreur est survenue !',
+              message: 'Une erreur est survenue !',
               progress: true,
               classes: 'glossy',
             })
@@ -1612,8 +1683,6 @@ export default defineComponent({
             cni_passeport_user.value = res.data.image
             cni_passeport_user2.value = res.data.image2
 
-            console.log(res.data);
-
             $q.notify({
               timeout: 2000,
               color: 'green-5',
@@ -1630,7 +1699,7 @@ export default defineComponent({
               textColor: 'white',
 
               icon: 'warning',
-              message: 'une erreur est survenue !',
+              message: 'Une erreur est survenue !',
               progress: true,
               classes: 'glossy',
             })
@@ -1643,7 +1712,7 @@ export default defineComponent({
             textColor: 'white',
 
             icon: 'warning',
-            message: 'une erreur est survenue !',
+            message: 'Une erreur est survenue !',
             progress: true,
             classes: 'glossy',
           })

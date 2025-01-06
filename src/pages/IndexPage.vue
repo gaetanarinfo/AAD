@@ -1,7 +1,11 @@
 <template>
-  <q-page :class="(!connexionState) ? 'disabled q-page' : 'q-page'" :style-fn="heightAuto">
+  <q-page
+    :class="(!connexionState) ? 'disabled q-page' : 'q-page' && isLoggedIn ? ' q-page-start' : 'q-page-not-logging'"
+    :style-fn="heightAuto">
 
     <Section1Component :connexionState="connexionState" />
+
+    <BonjourComponent :connexionState="connexionState" />
 
     <Section2Component :connexionState="connexionState" />
 
@@ -16,8 +20,11 @@ import { defineComponent } from 'vue'
 import { ref } from 'vue'
 
 import Section1Component from 'components/home/Section1.vue'
+import BonjourComponent from 'components/home/Bonjour.vue'
 import Section2Component from 'components/home/Section2.vue'
 import FooterComponent from 'components/Footer.vue'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from 'stores/user'
 
 const connexionState = ref(true)
 
@@ -25,11 +32,17 @@ export default defineComponent({
   name: 'IndexPage',
   components: {
     Section1Component,
+    BonjourComponent,
     Section2Component,
     FooterComponent
   },
   setup () {
+
+    const userStore = useUserStore()
+    const { isLoggedIn } = storeToRefs(userStore)
+
     return {
+      isLoggedIn,
       onLine: navigator.onLine,
       connexionState
     }

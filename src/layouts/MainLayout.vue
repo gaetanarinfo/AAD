@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
 
-    <q-header :class="(!connexionState) ? 'disable' : ''" elevated style="position: relative;">
+    <q-header v-if="isLoggedIn" :class="(!connexionState) ? 'disable' : ''" elevated style="position: relative;">
 
       <q-toolbar class="glossy bg-light-blue-9">
 
@@ -55,12 +55,22 @@
 
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" :class="(!connexionState) ? 'disabled leftDrawerOpen' : 'leftDrawerOpen'"
-      bordered>
+    <q-drawer behavior="mobile" v-model="leftDrawerOpen"
+      :class="(!connexionState) ? 'disabled leftDrawerOpen' : 'leftDrawerOpen'" bordered>
 
       <q-scroll-area class="fit">
 
-        <q-list>
+        <q-toolbar class="GPL__toolbar">
+
+          <q-toolbar-title class="row items-center text-grey-8">
+
+            <img class="q-pl-md" src="~assets/logo_small.png">
+
+          </q-toolbar-title>
+
+        </q-toolbar>
+
+        <q-list padding>
 
           <MenuComponent v-for="link in linksList" :key="link.title" v-bind="link" />
 
@@ -76,7 +86,7 @@
 
           <q-item clickable v-ripple @click="settings">
             <q-item-section avatar>
-              <q-icon class="fa-solid fa-cog" color="grey" />
+              <q-icon class="fa-solid fa-cog" style="padding-left: 12px; color:#5f6368;" />
             </q-item-section>
 
             <q-item-section>
@@ -148,7 +158,7 @@
         <q-list padding>
 
           <q-item :active="this.$route.path === '/my-account'" active-class="text-light-blue-9"
-            @click="this.$router.push('/my-account')" v-ripple clickablee>
+            @click="this.$router.push('/my-account')" v-ripple clickable>
 
             <q-item-section avatar>
               <q-icon name="edit" />
@@ -318,6 +328,19 @@
 
           </q-item>
 
+          <q-item :active="this.$route.path === '/companie/documents'" active-class="text-light-blue-9"
+            @click="this.$router.push('/companie/documents')" v-ripple clickable>
+
+            <q-item-section avatar>
+              <q-icon name="description" />
+            </q-item-section>
+
+            <q-item-section>
+              Documents
+            </q-item-section>
+
+          </q-item>
+
           <q-item @click="logout()" v-ripple clickable>
 
             <q-item-section avatar>
@@ -362,9 +385,7 @@
 
             <div class="text-weight-bold">{{ user.firstname + ' ' + user.lastname }}</div>
 
-            <div class="text-weight-bold">Compte {{ (user.user_type === 1) ? 'Utilisateur' :
-              (user.user_type === 2) ?
-                'Professionnelle' : '' }}
+            <div class="text-weight-bold">Compte Personnel
             </div>
 
             <div class="text-weight-bold">Inscrit depuis le {{
@@ -403,7 +424,7 @@
 
             <div class="text-weight-bold">Compte {{ (user.user_type === 1) ? 'Utilisateur' :
               (user.user_type === 2) ?
-                'Professionnelle' : '' }}
+                'Agence' : '' }}{{ (companie.user_id !== 0) ? ' - Directeur' : '' }}
             </div>
 
             <div class="text-weight-bold">Fondé le {{
@@ -434,6 +455,7 @@
     <q-page-container style="padding-bottom: 0; padding-top: 0;">
       <router-view />
     </q-page-container>
+
   </q-layout>
 
   <q-dialog v-if="isLoggedIn" v-model="notificationsDialog" position="bottom">
@@ -510,7 +532,8 @@ const leftDrawerOpen = ref(false),
   photo_profil = ref(''),
   photo_profil_pro = ref(''),
   submittingStatus = ref(false),
-  card_pro = ref(false)
+  card_pro = ref(false),
+  user_leader = ref(0)
 
 export default defineComponent({
   name: 'MainLayout',
@@ -556,7 +579,7 @@ export default defineComponent({
           textColor: 'white',
 
           icon: 'warning',
-          message: 'une erreur est survenue !',
+          message: 'Une erreur est survenue !',
           progress: true,
           classes: 'glossy',
         })
@@ -602,7 +625,7 @@ export default defineComponent({
             textColor: 'white',
 
             icon: 'warning',
-            message: 'une erreur est survenue !',
+            message: 'Une erreur est survenue !',
             progress: true,
             classes: 'glossy',
           })
@@ -622,6 +645,7 @@ export default defineComponent({
     }
 
     return {
+      user_leader,
       logout () {
         SessionStorage.clear()
         window.location.reload()
@@ -743,7 +767,7 @@ export default defineComponent({
                 textColor: 'white',
 
                 icon: 'warning',
-                message: 'une erreur est survenue !',
+                message: 'Une erreur est survenue !',
                 progress: true,
                 classes: 'glossy',
               })
@@ -773,7 +797,7 @@ export default defineComponent({
             textColor: 'white',
 
             icon: 'warning',
-            message: 'une erreur est survenue !',
+            message: 'Une erreur est survenue !',
             progress: true,
             classes: 'glossy',
           })
@@ -820,7 +844,7 @@ export default defineComponent({
                 textColor: 'white',
 
                 icon: 'warning',
-                message: 'une erreur est survenue !',
+                message: 'Une erreur est survenue !',
                 progress: true,
                 classes: 'glossy',
               })
@@ -850,7 +874,7 @@ export default defineComponent({
             textColor: 'white',
 
             icon: 'warning',
-            message: 'une erreur est survenue !',
+            message: 'Une erreur est survenue !',
             progress: true,
             classes: 'glossy',
           })
@@ -885,21 +909,21 @@ export default defineComponent({
           icon: 'fa-solid fa-house',
           link: '/',
           enable: false,
-          color: 'grey'
+          color: '#5f6368'
         },
         {
           title: 'Qui somme nous ?',
           icon: 'fa-solid fa-circle-question',
           link: '/',
           enable: false,
-          color: 'grey'
+          color: '#5f6368'
         },
         {
           title: 'Contact',
           icon: 'fa-solid fa-at',
           link: '/',
           enable: false,
-          color: 'grey'
+          color: '#5f6368'
         }
       ],
       linksList2: [
@@ -931,14 +955,14 @@ export default defineComponent({
           icon: 'fa-solid fa-flag',
           link: '/',
           enable: false,
-          color: 'grey'
+          color: '#5f6368'
         },
         {
           title: 'Aide',
           icon: 'fa-solid fa-circle-question',
           link: '/',
           enable: false,
-          color: 'grey'
+          color: '#5f6368'
         }
       ],
       footers: [

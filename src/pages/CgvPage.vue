@@ -31,7 +31,7 @@
 
     </transition>
 
-    <transition v-show="bloc_show" appear enter-active-class="animated fadeIn" style="margin-bottom: 30px;"
+    <transition v-show="bloc_show" appear enter-active-class="animated fadeIn" style="margin-bottom: 90px;;"
       leave-active-class="animated fadeOut">
 
       <div class="w-100 flex flex-center column">

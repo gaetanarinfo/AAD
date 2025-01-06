@@ -145,7 +145,7 @@
 
           </div>
 
-          <div class="row-center" style="margin-top: 30px;margin-bottom: 30px;">
+          <div class="row-center" style="margin-top: 30px;margin-bottom: 90px;;">
             <q-btn size="xl" type="submit" v-ripple color="light-blue-9 glossy" style="max-width: 100px;" dense rounded
               icon="arrow_forward"></q-btn>
           </div>
@@ -156,10 +156,11 @@
 
     </transition>
 
+    <FooterComponent />
+
   </q-page>
 
 </template>
-
 
 <script>
 
@@ -168,6 +169,7 @@ import { useQuasar } from 'quasar'
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import moment from 'moment/min/moment-with-locales';
+import FooterComponent from 'components/Footer.vue'
 
 moment.locale('fr')
 
@@ -189,6 +191,7 @@ const civilite = ref('Mr'),
 export default defineComponent({
   name: 'ContactPage',
   components: {
+    FooterComponent
   },
   setup () {
 
