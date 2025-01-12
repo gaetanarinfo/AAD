@@ -34,7 +34,7 @@
     <transition v-show="documents_show" appear enter-active-class="animated fadeIn"
       leave-active-class="animated fadeOut">
 
-      <div class="w-100 flex flex-center column" style="margin-bottom: 90px;;">
+      <div class="w-100 flex flex-center column" style="margin-bottom: 90px;">
 
         <h5 class="text-center" style="margin-top: 1rem;margin-bottom: 2rem;">Mes documents
         </h5>

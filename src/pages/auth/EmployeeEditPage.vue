@@ -26,6 +26,23 @@
 
         <h5>{{ user_employee.firstname + ' ' + user_employee.lastname }}</h5>
 
+        <div class="w-100" style="margin-bottom: 1.67em;">
+
+          <q-btn-group class="w-100">
+
+            <q-btn @click="btn_profil = 'edit', changeProfil()" :disable="(btn_profil === 'edit') ? true : false"
+              class="w-100" style="font-weight: 600;font-size: 14px;text-transform: none;letter-spacing: normal;"
+              color="light-blue-9" glossy text-color="white" label="Éditer" />
+
+            <q-btn @click="btn_profil = 'planning', changeProfil()"
+              :disable="(btn_profil === 'planning') ? true : false" class="w-100"
+              style="font-weight: 600;font-size: 14px;text-transform: none;letter-spacing: normal;" color="light-blue-9"
+              glossy text-color="white" v-ripple label="Planning" />
+
+          </q-btn-group>
+
+        </div>
+
         <q-form @submit="onSubmitEditUser">
 
           <div class="flex-start column items-start" style="margin-bottom: 10px;">
@@ -51,7 +68,7 @@
             <div class="flex-start row items-start">
 
               <q-radio v-model="status" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
-                val="2" label="Directeur" />
+                val="2" label="Dirigeant" />
 
               <q-radio v-model="status" checked-icon="task_alt" color="light-blue-9" unchecked-icon="panorama_fish_eye"
                 val="3" label="Employé" />
@@ -139,7 +156,7 @@
                 <q-item-label tyle="text-overflow: initial;white-space: initial;overflow: initial;" caption
                   lines="2"><strong>{{
                     adress.postcode + ' ' + adress.city + ' ' + adress.country
-                    }}</strong></q-item-label>
+                  }}</strong></q-item-label>
               </q-item-section>
 
             </q-item>
@@ -261,6 +278,182 @@
 
     </transition>
 
+    <transition v-show="planing_show" appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut"
+      style="margin-top: 30px;">
+
+      <div class="column text-center w-100 form-w">
+
+        <div class="w-100">
+
+          <q-avatar style="width: 100px;height: auto;">
+            <q-img spinner-color="light-blue-9" :src="user_employee.photo" />
+          </q-avatar>
+
+        </div>
+
+        <h5>{{ user_employee.firstname + ' ' + user_employee.lastname }}</h5>
+
+        <div class="w-100" style="margin-bottom: 1.67em;">
+
+          <q-btn-group class="w-100">
+
+            <q-btn @click="btn_profil = 'edit', changeProfil()" :disable="(btn_profil === 'edit') ? true : false"
+              class="w-100" style="font-weight: 600;font-size: 14px;text-transform: none;letter-spacing: normal;"
+              color="light-blue-9" glossy text-color="white" label="Éditer" />
+
+            <q-btn @click="btn_profil = 'planning', changeProfil()"
+              :disable="(btn_profil === 'planning') ? true : false" class="w-100"
+              style="font-weight: 600;font-size: 14px;text-transform: none;letter-spacing: normal;" color="light-blue-9"
+              glossy text-color="white" v-ripple label="Planning" />
+
+          </q-btn-group>
+
+        </div>
+
+        <q-form @submit="sendFormPlanning()">
+
+          <q-list style="text-align: left;" class="w-100">
+
+            <q-expansion-item :disable="tab === day" :default-opened="day === 'Lundi'" group="somegroup"
+              v-for="day in days" @click="showTab(day)" hide-expand-icon class="q-mb-md"
+              :header-class="(tab === day) ? 'glossy bg-light-blue-9 text-white' : 'bg-grey-3'" expand-separator>
+
+              <template v-slot:header>
+                <q-item-section style="padding-left: 16px; padding-right: 16px;font-weight: 600;">
+                  {{ day }}
+                </q-item-section>
+
+                <q-item-section side style="padding-left: 10px; padding-right: 10px;">
+                  <div class="row items-center">
+                    <q-icon :name="(tab === day) ? 'keyboard_arrow_down' : 'keyboard_arrow_right'"
+                      :color="(tab === day) ? 'white' : 'black'" size="24px" />
+                  </div>
+                </q-item-section>
+              </template>
+
+              <q-card>
+
+                <q-card-section>
+
+                  <q-list>
+
+                    <q-item tag="label" v-ripple>
+
+                      <q-item-section>
+                        <q-item-label>Congé</q-item-label>
+                      </q-item-section>
+
+                      <q-item-section avatar>
+                        <q-toggle color="light-blue-9" v-model="conge[0][day].active" :val="day" checked-icon="check"
+                          unchecked-icon="clear" keep-color />
+                      </q-item-section>
+
+                    </q-item>
+
+                  </q-list>
+
+                  <div v-show="!conge[0][day].active">
+
+                    <q-separator style="margin: 0 0 20px 0;" />
+
+                    <q-label>Matin :</q-label>
+
+                    <div class="row">
+                      <div class="col-6" style="padding-right: 15px;">
+                        <q-input dense v-model="conge[0][day].am" mask="time">
+                          <template v-slot:append>
+                            <q-icon name="access_time" class="cursor-pointer">
+                              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-time v-model="conge[0][day].am">
+                                  <div class="row items-center justify-end">
+                                    <q-btn v-close-popup label="Fermer" color="light-blue-9" flat />
+                                  </div>
+                                </q-time>
+                              </q-popup-proxy>
+                            </q-icon>
+                          </template>
+                        </q-input>
+                      </div>
+
+                      <div class="col-6" style="padding-left: 15px;">
+                        <q-input dense v-model="conge[0][day].am2" mask="time">
+                          <template v-slot:append>
+                            <q-icon name="access_time" class="cursor-pointer">
+                              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-time v-model="conge[0][day].am2">
+                                  <div class="row items-center justify-end">
+                                    <q-btn v-close-popup label="Fermer" color="light-blue-9" flat />
+                                  </div>
+                                </q-time>
+                              </q-popup-proxy>
+                            </q-icon>
+                          </template>
+                        </q-input>
+                      </div>
+                    </div>
+
+                    <q-item-label style="margin-top: 20px;">Après-midi :</q-item-label>
+
+                    <div class="row">
+                      <div class="col-6" style="padding-right: 15px;">
+                        <q-input dense v-model="conge[0][day].pm" mask="time">
+                          <template v-slot:append>
+                            <q-icon name="access_time" class="cursor-pointer">
+                              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-time v-model="conge[0][day].pm">
+                                  <div class="row items-center justify-end">
+                                    <q-btn v-close-popup label="Fermer" color="light-blue-9" flat />
+                                  </div>
+                                </q-time>
+                              </q-popup-proxy>
+                            </q-icon>
+                          </template>
+                        </q-input>
+                      </div>
+
+                      <div class="col-6" style="padding-left: 15px;">
+                        <q-input dense v-model="conge[0][day].pm2" mask="time">
+                          <template v-slot:append>
+                            <q-icon name="access_time" class="cursor-pointer">
+                              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-time v-model="conge[0][day].pm2">
+                                  <div class="row items-center justify-end">
+                                    <q-btn v-close-popup label="Fermer" color="light-blue-9" flat />
+                                  </div>
+                                </q-time>
+                              </q-popup-proxy>
+                            </q-icon>
+                          </template>
+                        </q-input>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </q-card-section>
+
+              </q-card>
+
+            </q-expansion-item>
+
+          </q-list>
+
+          <div class="row-center w-100" style="margin-top: 30px;margin-bottom: 90px;;">
+
+            <q-btn type="submit" glossy v-ripple padding="10px" class="w-100" dense color="light-blue-9">
+
+              <div style="font-weight: 600;">Envoyer</div>
+
+            </q-btn>
+
+          </div>
+
+        </q-form>
+
+      </div>
+
+    </transition>
+
     <FooterComponent />
 
   </q-page>
@@ -285,12 +478,83 @@ const connexionState = ref(true),
   folderAPI = ref(process.env.API),
   loader = ref(true),
   users_show = ref(false),
+  planing_show = ref(false),
   user_employee = ref([]),
-  user = ref([])
+  user = ref([]),
+  btn_profil = ref('edit'),
+  days = ref([
+    'Lundi',
+    'Mardi',
+    'Mercredi',
+    'Jeudi',
+    'Vendredi',
+    'Samedi',
+    'Dimanche',
+  ]),
+  tab = ref(''),
+  conge = ref([{
+    'Lundi': {
+      day: 'Lundi',
+      am: '00:00',
+      am2: '00:00',
+      pm: '00:00',
+      pm2: '00:00',
+      active: false
+    },
+    'Mardi': {
+      day: 'Mardi',
+      am: '00:00',
+      am2: '00:00',
+      pm: '00:00',
+      pm2: '00:00',
+      active: false
+    },
+    'Mercredi': {
+      day: 'Mercredi',
+      am: '00:00',
+      am2: '00:00',
+      pm: '00:00',
+      pm2: '00:00',
+      active: false
+    },
+    'Jeudi': {
+      day: 'Jeudi',
+      am: '00:00',
+      am2: '00:00',
+      pm: '00:00',
+      pm2: '00:00',
+      active: false
+    },
+    'Vendredi': {
+      day: 'Vendredi',
+      am: '00:00',
+      am2: '00:00',
+      pm: '00:00',
+      pm2: '00:00',
+      active: false
+    },
+    'Samedi': {
+      day: 'Samedi',
+      am: '00:00',
+      am2: '00:00',
+      pm: '00:00',
+      pm2: '00:00',
+      active: false
+    },
+    'Dimanche': {
+      day: 'Dimanche',
+      am: '00:00',
+      am2: '00:00',
+      pm: '00:00',
+      pm2: '00:00',
+      active: false
+    },
+  }])
 
 // Forms
 const email = ref(''),
   lastname = ref(''),
+  userId = ref(0),
   firstname = ref(''),
   naissance = ref(''),
   phone = ref(''),
@@ -344,6 +608,7 @@ export default defineComponent({
               user_employee.value = res.data.user
 
               // Forms
+              userId.value = res.data.user.id
               status.value = String(user_employee.value.user_type)
               status_user.value = String(user_employee.value.active)
               email.value = user_employee.value.email
@@ -358,6 +623,80 @@ export default defineComponent({
               codepostal.value = String(user_employee.value.codepostal)
               pays.value = user_employee.value.pays
 
+              axios.get(process.env.API + '/api/companie/user-planning/' + userStore.stateUser.companie.id + '/' + userId.value)
+                .then(res => {
+
+                  if (res.data.succes) {
+
+                    if (res.data.planning.length >= 1) {
+
+                      conge.value = []
+
+                      conge.value = [{
+                        'Lundi': {
+                          day: res.data.planning[0].day,
+                          am: res.data.planning[0].hour_am,
+                          am2: res.data.planning[0].hour_am2,
+                          pm: res.data.planning[0].hour_pm,
+                          pm2: res.data.planning[0].hour_pm2,
+                          active: (res.data.planning[0].active === 1) ? false : true
+                        },
+                        'Mardi': {
+                          day: res.data.planning[1].day,
+                          am: res.data.planning[1].hour_am,
+                          am2: res.data.planning[1].hour_am2,
+                          pm: res.data.planning[1].hour_pm,
+                          pm2: res.data.planning[1].hour_pm2,
+                          active: (res.data.planning[1].active === 1) ? false : true
+                        },
+                        'Mercredi': {
+                          day: res.data.planning[2].day,
+                          am: res.data.planning[2].hour_am,
+                          am2: res.data.planning[2].hour_am2,
+                          pm: res.data.planning[2].hour_pm,
+                          pm2: res.data.planning[2].hour_pm2,
+                          active: (res.data.planning[2].active === 1) ? false : true
+                        },
+                        'Jeudi': {
+                          day: res.data.planning[3].day,
+                          am: res.data.planning[3].hour_am,
+                          am2: res.data.planning[3].hour_am2,
+                          pm: res.data.planning[3].hour_pm,
+                          pm2: res.data.planning[3].hour_pm2,
+                          active: (res.data.planning[3].active === 1) ? false : true
+                        },
+                        'Vendredi': {
+                          day: res.data.planning[4].day,
+                          am: res.data.planning[4].hour_am,
+                          am2: res.data.planning[4].hour_am2,
+                          pm: res.data.planning[4].hour_pm,
+                          pm2: res.data.planning[4].hour_pm2,
+                          active: (res.data.planning[4].active === 1) ? false : true
+                        },
+                        'Samedi': {
+                          day: res.data.planning[5].day,
+                          am: res.data.planning[5].hour_am,
+                          am2: res.data.planning[5].hour_am2,
+                          pm: res.data.planning[5].hour_pm,
+                          pm2: res.data.planning[5].hour_pm2,
+                          active: (res.data.planning[5].active === 1) ? false : true
+                        },
+                        'Dimanche': {
+                          day: res.data.planning[6].day,
+                          am: res.data.planning[6].hour_am,
+                          am2: res.data.planning[6].hour_am2,
+                          pm: res.data.planning[6].hour_pm,
+                          pm2: res.data.planning[6].hour_pm2,
+                          active: (res.data.planning[6].active === 1) ? false : true
+                        },
+                      }]
+
+                    }
+
+                  }
+
+                })
+
             } else {
               user_employee.value = []
               router.push('/companie')
@@ -370,9 +709,140 @@ export default defineComponent({
     }
 
     return {
+      showTab (day) {
+        tab.value = day
+      },
+      sendFormPlanning () {
+
+        users_show.value = false
+        planing_show.value = false
+
+        setTimeout(() => {
+          loader.value = true
+        }, 1200);
+
+        setTimeout(() => {
+          loader.value = false
+        }, 3500);
+
+        axios.post(folderAPI.value + '/api/companie/user-planning',
+          {
+            companieId: userStore.stateUser.companie.id,
+            userId: userId.value,
+            email: route.params.email,
+            conge: conge.value,
+            days: days.value
+          }
+        ).then(res => {
+
+          if (res.data.succes) {
+
+            $q.notify({
+              timeout: 2000,
+              color: 'green-5',
+              textColor: 'white',
+              icon: 'cloud_done',
+              message: res.data.message,
+              progress: true,
+              classes: 'glossy',
+            })
+
+            setTimeout(() => {
+              loader.value = false
+            }, 3500);
+
+            setTimeout(() => {
+              users_show.value = true
+            }, 4000);
+
+          } else {
+
+            $q.notify({
+              timeout: 2000,
+              color: 'red-5',
+              textColor: 'white',
+
+              icon: 'warning',
+              message: res.data.message,
+              progress: true,
+              classes: 'glossy',
+            })
+
+            setTimeout(() => {
+              loader.value = false
+            }, 3500);
+
+            setTimeout(() => {
+              logo.value = true
+              users_show.value = true
+            }, 4000);
+
+          }
+
+        }).catch(error => {
+
+          $q.notify({
+            timeout: 2000,
+            color: 'red-5',
+            textColor: 'white',
+
+            icon: 'warning',
+            message: res.data.message,
+            progress: true,
+            classes: 'glossy',
+          })
+
+
+          setTimeout(() => {
+            loader.value = false
+          }, 3500);
+
+          setTimeout(() => {
+            logo.value = true
+            users_show.value = true
+          }, 4000);
+
+        })
+
+        btn_profil.value = 'edit'
+
+      },
+      changeProfil () {
+
+        users_show.value = false
+        planing_show.value = false
+
+        setTimeout(() => {
+          loader.value = true
+        }, 1200);
+
+        if (btn_profil.value === 'edit') {
+
+          setTimeout(() => {
+            loader.value = false
+          }, 3500);
+
+          setTimeout(() => {
+            users_show.value = true
+          }, 4000);
+
+        } else if (btn_profil.value === 'planning') {
+
+          setTimeout(() => {
+            loader.value = false
+          }, 3500);
+
+          setTimeout(() => {
+            planing_show.value = true
+          }, 4000);
+
+        }
+
+      },
       onSubmitEditUser () {
 
         users_show.value = false
+        planing_show.value = false
 
         setTimeout(() => {
           loader.value = true
@@ -580,6 +1050,12 @@ export default defineComponent({
         }
 
       },
+
+      userId,
+      days,
+      tab,
+      planing_show,
+      btn_profil,
       user_employee,
       moment: moment,
       user,
@@ -607,6 +1083,7 @@ export default defineComponent({
       options,
       status,
       status_user,
+      conge,
     }
 
   },
@@ -639,6 +1116,8 @@ export default defineComponent({
     const userStore = useUserStore()
     const { isLoggedIn } = storeToRefs(userStore)
 
+    tab.value = 'Lundi'
+
     if (this.connexionState) {
 
       // Liste des pays
@@ -666,6 +1145,7 @@ export default defineComponent({
     }
 
     users_show.value = false
+    planing_show.value = false
 
     setTimeout(() => {
       loader.value = true

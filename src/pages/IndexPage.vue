@@ -9,6 +9,8 @@
 
     <Section2Component :connexionState="connexionState" />
 
+    <Section3Component :connexionState="connexionState" />
+
     <FooterComponent />
 
   </q-page>
@@ -22,6 +24,7 @@ import { ref } from 'vue'
 import Section1Component from 'components/home/Section1.vue'
 import BonjourComponent from 'components/home/Bonjour.vue'
 import Section2Component from 'components/home/Section2.vue'
+import Section3Component from 'components/home/Section3.vue'
 import FooterComponent from 'components/Footer.vue'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from 'stores/user'
@@ -34,6 +37,7 @@ export default defineComponent({
     Section1Component,
     BonjourComponent,
     Section2Component,
+    Section3Component,
     FooterComponent
   },
   setup () {

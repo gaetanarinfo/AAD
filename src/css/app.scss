@@ -315,6 +315,21 @@ p {
     border: none;
 }
 
+.q-splitter__panel {
+    width: 100% !important;
+}
+
+.q-splitter__before,
+.q-splitter__after {
+    overflow: none;
+}
+
+.q-splitter__panel {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
 .hide {
     display: none;
 }

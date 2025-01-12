@@ -91,7 +91,7 @@
                 <q-td key="actions" :props="props" style="text-align: center;">
 
                   <q-btn v-ripple flat dense round
-                    @click="this.$router.push('/companie/users/edit/' + companie_id + '/' + props.row.id)">
+                    @click="this.$router.push('/companie/users/edit/' + companie_id + '/' + props.row.email)">
                     <q-icon name="edit" color="green-9" />
                     <q-tooltip anchor="center left" self="center right" :offset="[10, 10]"
                       class="glossy bg-light-blue-9 text-weight-bold">Éditer</q-tooltip>

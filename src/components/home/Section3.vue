@@ -1,11 +1,11 @@
 <template name="Section2Component">
 
-  <transition v-show="services_list" v-if="isLoggedIn && user.user_type <= 1" appear
+  <transition v-show="services_list" v-if="isLoggedIn && user.user_type >= 3" appear
     enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
 
     <div class="column text-center w-100">
 
-      <h5 class="q-mt-md q-mb-md">Mes demandes de prestation</h5>
+      <h5 class="q-mt-md q-mb-md">Planning de prestation</h5>
 
       <q-list v-if="services.length >= 1" style="min-width: 300px; text-align: left;" bordered separator>
 
@@ -67,11 +67,11 @@ export default defineComponent({
   mounted () {
 
     const userStore = useUserStore()
-    const { isLoggedIn, user } = storeToRefs(userStore)
+    const { isLoggedIn } = storeToRefs(userStore)
 
     services_list.value = false
 
-    if (this.connexionState && this.isLoggedIn && userStore.stateUser.user.user_type <= 1) {
+    if (this.connexionState && this.isLoggedIn && userStore.stateUser.user.user_type >= 2) {
 
       setTimeout(() => {
         services_list.value = true
@@ -81,7 +81,7 @@ export default defineComponent({
 
       services.value = []
 
-      axios.get(process.env.API + '/api/user/services/' + userStore.stateUser.user.email)
+      axios.get(process.env.API + '/api/companie/user-services/' + userStore.stateUser.companie.id + '/' + userStore.stateUser.user.id)
         .then(res => {
 
           if (res.data.succes) {

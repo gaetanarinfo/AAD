@@ -38,8 +38,20 @@ const routes = [
         component: () => import('src/pages/auth/EmployeeEditPage.vue'),
       },
       {
+        path: '/companie/planning',
+        component: () => import('src/pages/auth/PlaningPage.vue'),
+      },
+      {
         path: '/companie/documents',
         component: () => import('src/pages/auth/DocumentsPage.vue'),
+      },
+      {
+        path: '/companie/price',
+        component: () => import('src/pages/auth/PricePage.vue'),
+      },
+      {
+        path: '/my-account/add-prestation',
+        component: () => import('src/pages/auth/AddPrestationPage.vue'),
       },
       {
         path: '/politique-confidentialite',

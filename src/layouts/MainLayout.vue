@@ -194,7 +194,8 @@
 
           </q-item>
 
-          <q-item clickable v-ripple>
+          <q-item :active="this.$route.path === '/my-account/inbox'" active-class="text-light-blue-9"
+            @click="this.$router.push('/my-account/inbox')" v-ripple clickable>
 
             <q-item-section avatar>
               <q-icon name="inbox" />
@@ -202,18 +203,6 @@
 
             <q-item-section>
               Messagerie
-            </q-item-section>
-
-          </q-item>
-
-          <q-item clickable v-ripple>
-
-            <q-item-section avatar>
-              <q-icon name="close" color="red-9" />
-            </q-item-section>
-
-            <q-item-section>
-              Clôturer le compte
             </q-item-section>
 
           </q-item>
@@ -265,7 +254,21 @@
 
           </q-item>
 
-          <q-item>
+          <q-item :active="this.$route.path === '/companie/price'" active-class="text-light-blue-9"
+            @click="this.$router.push('/companie/price')" v-ripple clickable>
+
+            <q-item-section avatar>
+              <q-icon name="euro" />
+            </q-item-section>
+
+            <q-item-section>
+              Gestion des tarifs
+            </q-item-section>
+
+          </q-item>
+
+          <q-item :active="this.$route.path === '/companie/planning'" active-class="text-light-blue-9"
+            @click="this.$router.push('/companie/planning')" v-ripple clickable>
 
             <q-item-section avatar>
               <q-icon name="event_note" />
@@ -424,7 +427,7 @@
 
             <div class="text-weight-bold">Compte {{ (user.user_type === 1) ? 'Utilisateur' :
               (user.user_type === 2) ?
-                'Agence' : '' }}{{ (companie.user_id !== 0) ? ' - Directeur' : '' }}
+                'Agence' : '' }}{{ (companie.user_id !== 0) ? ' - Dirigeant' : '' }}
             </div>
 
             <div class="text-weight-bold">Fondé le {{
@@ -589,7 +592,7 @@ export default defineComponent({
       photo_profil.value = userStore.stateUser.user.photo
       user.value = userStore.stateUser.user
 
-      if (user.value.user_type === 2) {
+      if (user.value.user_type >= 2) {
         photo_profil_pro.value = userStore.stateUser.user.logo
         companie.value = userStore.stateUser.companie
       }
@@ -921,7 +924,7 @@ export default defineComponent({
         {
           title: 'Contact',
           icon: 'fa-solid fa-at',
-          link: '/',
+          link: '/contact',
           enable: false,
           color: '#5f6368'
         }

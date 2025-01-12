@@ -52,7 +52,7 @@ export default defineComponent({
             if (res.data.authenticate.user !== undefined) {
               userStore.$state.stateUser.user = res.data.authenticate.user;
 
-              if (res.data.authenticate.user.user_type === 2) {
+              if (res.data.authenticate.user.user_type >= 2) {
                 userStore.$state.stateUser.companie = res.data.authenticate.companie;
               }
 
