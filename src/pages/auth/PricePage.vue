@@ -36,17 +36,29 @@
             <q-section-label class="text-left text-grey-8">Il est nécessaire d'indiquer les montants sans le crédit
               d'impôt et par heure de prestation !</q-section-label>
 
-            <q-input dense filled v-model="price_ht_hour" mask="##,## €" style="margin-top: 16px;" label="Montant HT *"
-              lazy-rules :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
-              <template v-slot:prepend>
+            <q-list class="w-100">
 
-                <q-icon name="euro" />
+              <q-item v-if="services.length >= 1" class="w-100" v-for="(service, index) in services"
+                style="align-items: center; padding-left: 0; padding-right: 0;">
 
-              </template>
+                <q-section-label style="margin-top: 16px;" class="q-mr-md w-100">{{ service.name }}</q-section-label>
 
-            </q-input>
+                <q-input dense filled mask="##,##" v-model="price_ht_hour[index].price_ht"
+                  style="margin-top: 16px; max-width: 120px; padding-bottom: 0;" label="Montant HT *" lazy-rules
+                  :rules="[val => val && val.length > 0 || 'S\'il vous plaît tapez quelque chose !']">
+                  <template v-slot:append>
 
-            <q-list style="margin-bottom: 16px;">
+                    <q-icon size="16px" name="euro" />
+
+                  </template>
+
+                </q-input>
+
+              </q-item>
+
+            </q-list>
+
+            <q-list style="margin-bottom: 16px;margin-top: 16px;">
 
               <q-item v-ripple class="q-pt-none q-pb-none q-pl-none q-pr-none">
 
@@ -117,8 +129,9 @@ const connexionState = ref(true),
   loader = ref(true),
   price_show = ref(false),
   user = ref([]),
-  price_ht_hour = ref(''),
-  credit_impot = ref(false)
+  price_ht_hour = ref([]),
+  credit_impot = ref(false),
+  services = ref([])
 
 export default defineComponent({
   name: 'PlaningPage',
@@ -144,14 +157,63 @@ export default defineComponent({
 
       user.value = userStore.stateUser.user
 
+      var array = []
+
       if (user.value.user_type === 2) {
+
+        axios.get(folderAPI.value + '/api/user/companies-services/' + userStore.stateUser.companie.id)
+          .then(res => {
+
+            if (res.data.succes) {
+
+              services.value = res.data.services
+              price_ht_hour.value = []
+
+              services.value.forEach(element => {
+                price_ht_hour.value.push({ 'price_ht': 0, service_id: element.id })
+              });
+
+            } else {
+
+              services.value = []
+              price_ht_hour.value = []
+
+            }
+
+          }).catch(error => {
+
+            services.value = []
+
+            $q.notify({
+              timeout: 2000,
+              color: 'red-5',
+              textColor: 'white',
+              icon: 'warning',
+              message: 'Une erreur est survenue !',
+              progress: true,
+              classes: 'glossy',
+            })
+
+          })
 
         axios.get(process.env.API + '/api/companie/user-tarifs/' + userStore.stateUser.companie.id)
           .then(res => {
 
             if (res.data.succes) {
-              credit_impot.value = (res.data.price.credit_impot === 0) ? false : true
-              price_ht_hour.value = res.data.price.price_ht_hour
+
+              if (res.data.price.length >= 1) {
+
+                credit_impot.value = (res.data.price[0].credit_impot === 0) ? false : true
+                price_ht_hour.value = []
+
+                res.data.price.forEach(element => {
+                  price_ht_hour.value.push({ 'price_ht': element.price_ht_hour, service_id: element.service_id })
+                });
+
+              } else {
+                price_ht_hour.value = []
+              }
+
             }
 
           })
@@ -177,7 +239,7 @@ export default defineComponent({
         axios.post(folderAPI.value + '/api/companie/user-tarifs',
           {
             companieId: userStore.stateUser.companie.id,
-            price_ht_hour: String(price_ht_hour.value).replace(' €', '').replace(',', '.'),
+            price_ht_hour: price_ht_hour.value,
             credit_impot: credit_impot.value
           }
         ).then(res => {
@@ -253,6 +315,7 @@ export default defineComponent({
         })
 
       },
+      services,
       credit_impot,
       price_ht_hour,
       price_show,

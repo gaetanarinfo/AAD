@@ -1285,8 +1285,8 @@
           maintentant</q-btn>
       </div>
 
-      <q-item style="margin-bottom: 30px;padding-top: 0;" class="w-100">
-        <q-img src="~assets/mollie.webp" style="max-width: 328px;" spinner-color="light-blue-9" />
+      <q-item style="margin-bottom: 30px;padding-top: 0;justify-content: center;" class="w-100">
+        <q-img src="~assets/paiement-securise-cb.jpeg" style="max-width: 230px;" spinner-color="light-blue-9" />
       </q-item>
 
     </div>
@@ -1796,7 +1796,7 @@ export default defineComponent({
           loader.value = true
         }, 1200);
 
-        axios.post(process.env.API + '/api/mollie/order-insert',
+        axios.post(process.env.API + '/api/paypal/order-insert',
           {
             email: email.value,
             cart_ht: cart_ht.value,
@@ -1820,7 +1820,7 @@ export default defineComponent({
 
           if (res.data.succes) {
 
-            location.href = process.env.API + '/api/mollie/create/' + res.data.order_id
+            location.href = process.env.API + '/api/paypal/create/' + res.data.order_id
 
           } else {
 

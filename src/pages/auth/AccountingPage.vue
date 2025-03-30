@@ -34,8 +34,8 @@
           <q-tabs id="tab-accounting" v-model="tab" class="bg-light-blue-9 glossy text-white" align="justify"
             narrow-indicator>
 
-            <q-tab name="mails" label="Valider" style="font-weight: 600;" />
-            <q-tab name="alarms" label="En attente" class="text-weight-bold" />
+            <q-tab name="total" label="Total" style="font-weight: 600;" />
+            <q-tab name="disponible" label="Disponible" class="text-weight-bold" />
 
           </q-tabs>
 
@@ -43,17 +43,17 @@
 
           <q-tab-panels v-model="tab" animated class="text-dark text-left">
 
-            <q-tab-panel name="mails" class="text-dark">
+            <q-tab-panel name="total" class="text-dark">
 
-              <div class="text-h6">Transactions Mollie</div>
+              <div class="text-h6">Transactions Paypal</div>
 
               <strong>{{ accounting_availableamount }} €</strong>
 
             </q-tab-panel>
 
-            <q-tab-panel name="alarms" class="text-dark">
+            <q-tab-panel name="disponible" class="text-dark">
 
-              <div class="text-h6">Transactions Mollie</div>
+              <div class="text-h6">Transactions Paypal</div>
 
               <strong>{{ accounting_pendingamount }} €</strong>
 
@@ -62,61 +62,6 @@
           </q-tab-panels>
 
         </q-card>
-
-        <h5 class="text-center" style="margin-top: 1rem;margin-bottom: 2rem;">Transactions pour l'année {{
-          moment().format('YYYY') }}</h5>
-
-        <div class="w-100 text-right">
-
-          <q-btn color="light-blue-9" class="glossy q-mb-sm" v-ripple icon-right="archive" label="Exporter vers csv"
-            no-caps @click="exportTable" />
-
-        </div>
-
-        <q-responsive :ratio="16 / 9" class="w-100 q-mb-xl">
-
-          <q-table :display-value="$q.lang.table.columns" :virtual-scroll-sticky-size-start="10" :grid="changeMode"
-            :filter="filter" :loading="loading" v-model:pagination="pagination" style="min-height: 648px;" flat bordered
-            virtual-scroll :rows="rows" :columns="columns" color="light-blue-9" row-key="type">
-
-            <template v-slot:top>
-
-              <q-btn flat round dense :icon="changeMode ? 'grid_view' : 'view_list'"
-                @click="changeMode ? changeMode = false : changeMode = true" />
-
-              <q-space />
-
-              <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher...">
-                <template v-slot:append>
-                  <q-icon name="search" />
-                </template>
-              </q-input>
-
-            </template>
-
-            <template v-slot:loading>
-              <q-inner-loading showing color="light-blue-9" />
-            </template>
-
-            <template v-slot:pagination="scope">
-
-              <q-btn v-if="scope.pagesNumber > 2" icon="first_page" color="grey-8" round dense flat
-                :disable="scope.isFirstPage" @click="scope.firstPage" />
-
-              <q-btn icon="chevron_left" color="grey-8" round dense flat :disable="scope.isFirstPage"
-                @click="scope.prevPage" />
-
-              <q-btn icon="chevron_right" color="grey-8" round dense flat :disable="scope.isLastPage"
-                @click="scope.nextPage" />
-
-              <q-btn v-if="scope.pagesNumber > 2" icon="last_page" color="grey-8" round dense flat
-                :disable="scope.isLastPage" @click="scope.lastPage" />
-
-            </template>
-
-          </q-table>
-
-        </q-responsive>
 
       </div>
 
@@ -150,49 +95,10 @@ const connexionState = ref(true),
   user = ref([]),
   accounting = ref([]),
   accounting_show = ref(false),
-  tab = ref('mails'),
+  tab = ref('total'),
   accounting_pendingamount = ref(''),
   accounting_availableamount = ref(''),
-  filter = ref(''),
-  loading = ref(false),
-  changeMode = ref(false)
-
-const columns = [
-  { name: 'type', label: 'Type', align: 'left', field: 'type', sortable: true, headerClasses: 'header-table' },
-  { name: 'montant_initial', label: 'Montant initial', align: 'left', field: 'montant_initial', sortable: true, headerClasses: 'header-table' },
-  { name: 'frais', label: 'Frais', field: 'frais', align: 'left', sortable: true, headerClasses: 'header-table' },
-  { name: 'created_at', label: 'Créée le', align: 'left', field: 'created_at', headerClasses: 'header-table' },
-]
-
-const rows = ref([])
-
-function wrapCsvValue (val, formatFn, row) {
-  let formatted = formatFn !== void 0
-    ? formatFn(val, row)
-    : val
-
-  formatted = formatted === void 0 || formatted === null
-    ? ''
-    : String(formatted)
-
-  formatted = formatted.split('"').join('""')
-  /**
-   * Excel accepts \n and \r in strings, but some other CSV parsers do not
-   * Uncomment the next two lines to escape new lines
-   */
-  // .split('\n').join('\\n')
-  // .split('\r').join('\\r')
-
-  return `"${formatted}"`
-}
-
-const pagination = ref({
-  sortBy: 'desc',
-  descending: false,
-  page: 1,
-  rowsPerPage: 10
-  // rowsNumber: xx if getting data from a server
-})
+  loading = ref(false)
 
 export default defineComponent({
   name: 'AccountingPages',
@@ -223,44 +129,18 @@ export default defineComponent({
 
         loading.value = true
         accounting.value = []
-        rows.value = []
 
         axios.get(process.env.API + '/api/companie/accounting/' + userStore.stateUser.companie.id)
           .then(res => {
 
             if (res.data.succes) {
 
-              accounting.value = res.data.accounting
-              accounting_pendingamount.value = accounting.value.pendingAmount.value
-              accounting_availableamount.value = accounting.value.availableAmount.value
-
-              if (res.data.balance_transactions.count >= 1) {
-
-                accounting.value.forEach(element => {
-
-                  rows.push(
-                    {
-                      type: element.type,
-                      montant_initial: element.initialAmount.value,
-                      frais: element.deductions.value,
-                      created_at: element.createdAt
-                    })
-
-                  loading.value = false
-
-                });
-
-              } else {
-
-                rows.value = []
-                accounting.value = []
-                loading.value = false
-
-              }
+              accounting.value = res.data.balance_transactions[0]
+              accounting_pendingamount.value = accounting.value.total_balance.value
+              accounting_availableamount.value = accounting.value.available_balance.value
 
             } else {
 
-              rows.value = []
               accounting.value = []
               loading.value = false
 
@@ -274,9 +154,6 @@ export default defineComponent({
 
     return {
       loading,
-      filter,
-      changeMode,
-      pagination,
       accounting_availableamount,
       accounting_pendingamount,
       tab,
@@ -291,47 +168,6 @@ export default defineComponent({
       onLine: navigator.onLine,
       connexionState,
       folderAPI,
-
-      columns,
-      rows,
-
-      exportTable () {
-        // naive encoding to csv format
-        const content = [columns.map(col => wrapCsvValue(col.label))].concat(
-          rows.value.map(row => columns.map(col => wrapCsvValue(
-            typeof col.field === 'function'
-              ? col.field(row)
-              : row[col.field === void 0 ? col.name : col.field],
-            col.format,
-            row
-          )).join(','))
-        ).join('\r\n')
-
-        const status = exportFile(
-          'table-export.csv',
-          content,
-          'text/csv'
-        )
-
-        if (status !== true) {
-
-          $q.notify({
-            timeout: 2000,
-            color: 'red-5',
-            textColor: 'white',
-            class: " glossy",
-            icon: 'warning',
-            message: 'Le navigateur a refusé le téléchargement du fichier...',
-            progress: true,
-            classes: 'glossy',
-          })
-
-        }
-      },
-
-      pagesNumber: computed(() => {
-        return Math.ceil(rows.length / pagination.value.rowsPerPage)
-      })
     }
 
   },

@@ -373,7 +373,7 @@
 
               <p
                 style="margin-bottom:0.5rem;word-break: break-all;text-transform: initial; letter-spacing: normal;font-size: 16px;">
-                Clé API (Mollie)
+                Clé API (Paypal)
                 :<br />
                 {{ bank.api_key }}
               </p>
@@ -382,7 +382,7 @@
 
               <p
                 style="margin-bottom:0.5rem;margin-top:0.5rem;word-break: break-all;text-transform: initial; letter-spacing: normal;font-size: 16px;">
-                Access Token API (Mollie)
+                Access Token API (Paypal)
                 :<br />
                 {{ bank.bareer_token }}
               </p>
@@ -411,7 +411,7 @@
               <p
                 style="margin-bottom:0.5rem;margin-top:0.5rem;word-break: break-all;text-transform: initial; letter-spacing: normal;font-size: 16px;">
                 Pour plus d"information :<br />
-                <a href="https://www.mollie.com/fr/developers">https://www.mollie.com/fr/developers</a>
+                <a href="https://www.paypal.com/fr">https://www.paypal.com/fr</a>
               </p>
 
             </q-card-section>

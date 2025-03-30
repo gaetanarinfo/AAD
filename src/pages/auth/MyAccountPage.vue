@@ -44,7 +44,7 @@
 
           </div>
 
-          <div class="flex-start column items-start" style="margin-bottom: 10px;">
+          <div v-if="user.user_type !== 1" class="flex-start column items-start" style="margin-bottom: 10px;">
 
             <q-item-label class="text-weight-bold">Statut dans l'entreprise :</q-item-label>
 
@@ -139,7 +139,7 @@
                 <q-item-label tyle="text-overflow: initial;white-space: initial;overflow: initial;" caption
                   lines="2"><strong>{{
                     adress.postcode + ' ' + adress.city + ' ' + adress.country
-                    }}</strong></q-item-label>
+                  }}</strong></q-item-label>
               </q-item-section>
 
             </q-item>

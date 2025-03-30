@@ -1,4 +1,4 @@
-<template name="OrdersHistoryPage">
+<template name="HistoricalServicesPage">
 
   <q-page :class="(!connexionState) ? 'disabled q-page q-page-start' : 'q-page q-page-start'" :style-fn="heightAuto">
 
@@ -25,7 +25,7 @@
 
       <div class="w-100 flex flex-center column" style="margin-bottom: 50px;">
 
-        <h5 class="text-center" style="margin-top: 1rem;margin-bottom: 1rem;">Mes commandes</h5>
+        <h5 class="text-center" style="margin-top: 1rem;margin-bottom: 1rem;">Historique des prestations</h5>
 
         <div class="w-100 text-right">
 
@@ -73,8 +73,8 @@
                   <strong>{{ props.row.id }}</strong>
                 </q-td>
 
-                <q-td key="produit" :props="props">
-                  {{ props.row.produit }}
+                <q-td key="services" :props="props">
+                  {{ props.row.services }}
                 </q-td>
 
                 <q-td key="price_ht" :props="props">
@@ -85,15 +85,12 @@
                   {{ props.row.price_ttc }}
                 </q-td>
 
-                <q-td key="qte" :props="props">
-                  {{ props.row.qte }}
-                </q-td>
-
                 <q-td key="mode_paiement" :props="props">
                   {{ props.row.mode_paiement }}
                 </q-td>
 
                 <q-td key="status" :props="props">
+
                   <q-badge v-if="props.row.status === 'Paiement en attente'" color="orange-9">
                     <strong>{{ props.row.status }}</strong>
                   </q-badge>
@@ -109,6 +106,7 @@
                   <q-badge v-else-if="props.row.status === 'Paiement rembourser'" color="red-9">
                     <strong>{{ props.row.status }}</strong>
                   </q-badge>
+
                 </q-td>
 
                 <q-td key="created_at" :props="props">
@@ -129,7 +127,7 @@
 
                 <q-td key="actions" :props="props" style="text-align: center;">
                   <q-btn v-ripple flat dense round
-                    @click="refundOrder('tr_' + props.row.id, moment(props.row.created).format('YYYY-MM-DD'))">
+                    @click="refundOrder('PAYID-' + props.row.id, moment(props.row.created).format('YYYY-MM-DD'))">
                     <q-icon name="refresh" color="red-9" />
                     <q-tooltip anchor="center left" self="center right" :offset="[10, 10]"
                       class="glossy bg-light-blue-9 text-weight-bold">Rembourser la commande</q-tooltip>
@@ -141,7 +139,7 @@
               <q-tr v-show="props.expand" :props="props">
 
                 <q-td colspan="100%">
-                  <div class="text-left text-weight-bold">{{ props.row.content }}</div>
+                  <div class="text-left text-weight-bold">{{ props.row.user }}</div>
                 </q-td>
 
               </q-tr>
@@ -167,6 +165,7 @@
           </q-table>
 
         </q-responsive>
+
 
       </div>
 
@@ -197,25 +196,24 @@ const connexionState = ref(true),
   logo = ref(false),
   loader = ref(true),
   orders_show = ref(false),
-  orders = ref([]),
+  historical_services = ref([]),
   user = ref([]),
   filter = ref(''),
   loading = ref(false),
   changeMode = ref(false),
-  visibleColumns = ref(['btn', 'id', 'produit', 'price_ht', 'price_ttc', 'qte', 'mode_paiement', 'status', 'created_at', 'validate_at', 'refund_at', 'actions'])
+  visibleColumns = ref(['btn', 'id', 'services', 'price_ht', 'price_ttc', 'mode_paiement', 'status', 'created_at', 'validate_at', 'refund_at', 'actions'])
 
 const columns = [
   { name: 'btn', label: '', align: 'left', field: 'btn', sortable: false },
   { name: 'id', label: 'N° de commande', align: 'left', field: 'id', sortable: false, headerClasses: 'header-table' },
-  { name: 'produit', label: 'Produit', field: 'produit', sortable: false, align: 'left', headerClasses: 'header-table' },
+  { name: 'services', label: 'Services', field: 'services', sortable: false, align: 'left', headerClasses: 'header-table' },
   { name: 'price_ht', label: 'Prix HT', field: 'price_ht', align: 'left', sortable: true, headerClasses: 'header-table' },
   { name: 'price_ttc', label: 'Prix TTC', field: 'price_ttc', align: 'left', sortable: true, headerClasses: 'header-table' },
-  { name: 'qte', label: 'Quantité', field: 'qte', align: 'left', sortable: true, headerClasses: 'header-table' },
   { name: 'mode_paiement', label: 'Mode de paiement', field: 'mode_paiement', align: 'left', sortable: true, headerClasses: 'header-table' },
   { name: 'status', label: 'Statut', field: 'status', align: 'left', sortable: false, headerClasses: 'header-table' },
   { name: 'created_at', label: 'Créer le', field: 'created_at', align: 'left', sortable: true, headerClasses: 'header-table' },
   { name: 'created', label: 'Created', field: 'created', align: 'left', sortable: true, headerClasses: 'header-table' },
-  { name: 'content', label: 'Content', field: 'content', align: 'left', sortable: true, headerClasses: 'header-table' },
+  { name: 'user', label: 'User', field: 'user', align: 'left', sortable: true, headerClasses: 'header-table' },
   { name: 'validate_at', label: 'Validé le', field: 'validate_at', align: 'left', sortable: true, headerClasses: 'header-table' },
   { name: 'refund_at', label: 'Rembourser le', field: 'refund_at', align: 'left', sortable: true, headerClasses: 'header-table' },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'center', sortable: false, headerClasses: 'header-table' },
@@ -252,7 +250,7 @@ const pagination = ref({
 })
 
 export default defineComponent({
-  name: 'OrdersHistoryPage',
+  name: 'HistoricalServicesPage',
   components: {
     FooterComponent
   },
@@ -278,33 +276,32 @@ export default defineComponent({
 
       if (user.value.user_type === 2) {
 
-        orders.value = []
+        historical_services.value = []
         rows.value = []
 
-        axios.get(process.env.API + '/api/companie/orders/' + userStore.stateUser.companie.id + '/' + userStore.stateUser.user.id)
+        axios.get(process.env.API + '/api/companie/historical-services/' + userStore.stateUser.companie.id)
           .then(res => {
 
             if (res.data.succes) {
 
-              orders.value = res.data.orders
+              historical_services.value = res.data.historical_services
 
-              if (res.data.orders.length >= 1) {
+              if (res.data.historical_services.length >= 1) {
 
-                orders.value.forEach(element => {
+                historical_services.value.forEach(element => {
 
                   rows.value.push(
                     {
                       btn: '',
                       id: String(element.paypal_id).replace('PAYID-', ''),
-                      produit: element.name,
-                      price_ht: element.price_ht + ' €',
-                      price_ttc: element.price_ttc + ' €',
-                      qte: element.qte,
+                      services: element.services,
+                      price_ht: element.total_ht + ' €',
+                      price_ttc: element.total_ttc + ' €',
                       mode_paiement: element.paiement,
                       status: element.title,
                       created_at: moment(element.created_at).format('DD MMMM YYYY'),
                       created: moment(element.created_at).format('YYYY-MM-DD'),
-                      content: element.content,
+                      user: 'Le client ' + element.lastname + ' ' + element.firstname + ' a demander une prestion de service du ' + moment(element.date_start).format('DD MMMM YYYY à HH:MM') + ' au ' + moment(element.date_end).format('DD MMMM YYYY à HH:MM'),
                       validate_at: (element.validate_at !== null) ? moment(element.validate_at).format('DD MMMM YYYY') : '/',
                       refund_at: (element.refund_at !== null) ? moment(element.refund_at).format('DD MMMM YYYY') : '/',
                     })
@@ -316,7 +313,7 @@ export default defineComponent({
               } else {
 
                 rows.value = []
-                orders.value = []
+                historical_services.value = []
                 loading.value = false
 
               }
@@ -324,7 +321,7 @@ export default defineComponent({
             } else {
 
               rows.value = []
-              orders.value = []
+              historical_services.value = []
               loading.value = false
 
             }
@@ -338,7 +335,7 @@ export default defineComponent({
     return {
       loading,
       filter,
-      orders,
+      historical_services,
       visibleColumns,
       changeMode,
       pagination,
@@ -390,14 +387,14 @@ export default defineComponent({
 
         if (user.value.user_type === 2) {
 
-          orders.value = []
+          historical_services.value = []
           rows.value = []
 
           if (this.connexionState && isLoggedIn) {
 
             if (moment().add(14, 'days').format('YYYY-MM-DD') >= moment(date).format('YYYY-MM-DD')) {
 
-              axios.post(process.env.API + '/api/paypal/order-refund', {
+              axios.post(process.env.API + '/api/paypal/order-refund-services', {
                 tokenPaiement: tokenPaiement,
                 userId: userStore.stateUser.user.id,
                 compagnieId: userStore.stateUser.companie.id
@@ -405,7 +402,7 @@ export default defineComponent({
 
                 if (res.data.succes) {
 
-                  orders.value = []
+                  historical_services.value = []
                   rows.value = []
 
                 } else {
@@ -420,35 +417,34 @@ export default defineComponent({
                     classes: 'glossy',
                   })
 
+                  historical_services.value = []
                   rows.value = []
-                  orders.value = []
 
-                  axios.get(process.env.API + '/api/companie/orders/' + userStore.stateUser.companie.id + '/' + userStore.stateUser.user.id)
+                  axios.get(process.env.API + '/api/companie/historical-services/' + userStore.stateUser.companie.id)
                     .then(res => {
 
                       if (res.data.succes) {
 
-                        orders.value = res.data.orders
+                        historical_services.value = res.data.historical_services
 
-                        if (res.data.orders.length >= 1) {
+                        if (res.data.historical_services.length >= 1) {
 
-                          orders.value.forEach(element => {
+                          historical_services.value.forEach(element => {
 
                             rows.value.push(
                               {
                                 btn: '',
-                                id: String(element.paypal_id).replace('tr_', ''),
-                                produit: element.name,
-                                price_ht: element.price_ht + ' €',
-                                price_ttc: element.price_ttc + ' €',
-                                qte: element.qte,
+                                id: String(element.paypal_id).replace('PAYID-', ''),
+                                services: element.services,
+                                price_ht: element.total_ht + ' €',
+                                price_ttc: element.total_ttc + ' €',
                                 mode_paiement: element.paiement,
                                 status: element.title,
                                 created_at: moment(element.created_at).format('DD MMMM YYYY'),
                                 created: moment(element.created_at).format('YYYY-MM-DD'),
-                                content: element.content,
-                                validate_at: (element.validate_at !== '') ? moment(element.validate_at).format('DD MMMM YYYY') : '/',
-                                refund_at: (element.refund_at !== '') ? moment(element.refund_at).format('DD MMMM YYYY') : '/',
+                                user: 'Le client ' + element.lastname + ' ' + element.firstname + ' a demander une prestion de service du ' + moment(element.date_start).format('DD MMMM YYYY à HH:MM') + ' au ' + moment(element.date_end).format('DD MMMM YYYY à HH:MM'),
+                                validate_at: (element.validate_at !== null) ? moment(element.validate_at).format('DD MMMM YYYY') : '/',
+                                refund_at: (element.refund_at !== null) ? moment(element.refund_at).format('DD MMMM YYYY') : '/',
                               })
 
                           });
@@ -458,7 +454,7 @@ export default defineComponent({
                         } else {
 
                           rows.value = []
-                          orders.value = []
+                          historical_services.value = []
                           loading.value = false
 
                         }
@@ -466,7 +462,7 @@ export default defineComponent({
                       } else {
 
                         rows.value = []
-                        orders.value = []
+                        historical_services.value = []
                         loading.value = false
 
                       }
@@ -511,9 +507,6 @@ export default defineComponent({
 
       },
 
-      pagesNumber: computed(() => {
-        return Math.ceil(rows.length / pagination.value.rowsPerPage)
-      })
     }
 
   },

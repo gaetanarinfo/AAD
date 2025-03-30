@@ -46,6 +46,10 @@ const routes = [
         component: () => import('src/pages/auth/DocumentsPage.vue'),
       },
       {
+        path: '/companie/historical-services',
+        component: () => import('src/pages/auth/HistoricalServicesPage.vue'),
+      },
+      {
         path: '/companie/price',
         component: () => import('src/pages/auth/PricePage.vue'),
       },

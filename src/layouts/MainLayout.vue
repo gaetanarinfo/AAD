@@ -149,7 +149,7 @@
 
     </q-drawer>
 
-    <q-drawer v-if="isLoggedIn" v-model="leftDrawerUser"
+    <q-drawer behavior="mobile" v-if="isLoggedIn" v-model="leftDrawerUser"
       :class="(!connexionState) ? 'disabled leftDrawerUser' : 'leftDrawerUser'" :breakpoint="400">
 
       <q-scroll-area v-if="user.user_type === 1 || user.user_type >= 2" v-show="!submittingStatus && !card_pro"
@@ -319,7 +319,8 @@
 
           </q-item>
 
-          <q-item clickable v-ripple>
+          <q-item :active="this.$route.path === '/companie/historical-services'" active-class="text-light-blue-9"
+            @click="this.$router.push('/companie/historical-services')" v-ripple clickable>
 
             <q-item-section avatar>
               <q-icon name="history" />

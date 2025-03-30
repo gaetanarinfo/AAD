@@ -740,7 +740,7 @@ export default defineComponent({
 
             axios.get(process.env.API + '/api/companie/sous-type/' + typeId.value)
               .then(res => {
-                console.log(res.data)
+
                 if (res.data.succes) {
 
                   documents_sous_type.value = res.data.sous_type
