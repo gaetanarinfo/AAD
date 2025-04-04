@@ -1,5 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap');
 
+.animateBackground {
+    background-repeat: no-repeat, no-repeat;
+    background-attachment: fixed, fixed;
+    animation: bgfade 15s infinite;
+    background-size: cover, cover;
+    background-position: center, center;
+    position: relative;
+}
+
+@keyframes bgfade {
+    0% {
+        background-image: url('assets/y06omya7n9qat0af.jpg');
+    }
+
+    50% {
+        background-image: url('assets/ALM_002152_700par465.jpg');
+    }
+
+    100% {
+        background-image: url('assets/y06omya7n9qat0af.jpg');
+    }
+}
+
+.animateBackground:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: black;
+    opacity: 0.3;
+}
+
 .loadings {
     min-height: 100vh;
     display: flex;
@@ -7,6 +41,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    justify-content: space-between;
 }
 
 @media all and (max-width: 768px) {

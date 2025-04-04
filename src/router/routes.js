@@ -72,6 +72,14 @@ const routes = [
       {
         path: '/contact',
         component: () => import('src/pages/ContactPage.vue'),
+      },
+      {
+        path: '/paiement/succes',
+        component: () => import('src/pages/PaiementSuccesPage.vue'),
+      },
+      {
+        path: '/paiement/cancel',
+        component: () => import('src/pages/PaiementCancelPage.vue'),
       }
     ],
   },

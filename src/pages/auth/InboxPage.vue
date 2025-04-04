@@ -348,13 +348,13 @@
 
         <q-icon name="filter_alt" size="md" />
 
-        <q-toolbar-title><span class="text-weight-bold">Filter mes courriers</span></q-toolbar-title>
+        <q-toolbar-title><span class="text-weight-bold">Filtrer mes courriers</span></q-toolbar-title>
 
       </q-toolbar>
 
       <q-form @submit="loadFilter()">
 
-        <q-item-label header class="q-pl-none">Filrer par état</q-item-label>
+        <q-item-label header class="q-pl-none">Filtrer par état</q-item-label>
 
         <q-btn-group class="w-100">
 
@@ -505,9 +505,12 @@ export default defineComponent({
 
     if (!isLoggedIn.value) {
       router.push('/')
+    } else if (isLoggedIn.value && userStore.stateUser.user.user_type <= 1) {
+      router.push('/')
     }
 
-    if (connexionState.value && isLoggedIn.value) {
+
+    if (connexionState.value && isLoggedIn.value && userStore.stateUser.user.user_type >= 2) {
 
       mails.value = []
       options.value = []

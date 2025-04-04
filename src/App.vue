@@ -5,14 +5,13 @@
 
     <div class="loadings">
 
-      <q-item>
-        <img alt="Quasar logo" spinner-color="light-blue-9" src="~assets/logo.jpg"
-          style="max-width: 350px; height: 100%" />
-      </q-item>
+      <div></div>
+
+      <div>
+      </div>
 
       <div class="q-pa-md w-100">
-        <q-linear-progress size="5px" dark indeterminate spinner-color="light-blue-9" color="light-blue-9"
-          class="q-mt-sm" />
+        <q-linear-progress size="5px" dark indeterminate spinner-color="blue-10" color="blue-10" class="q-mt-sm" />
       </div>
 
     </div>
@@ -81,10 +80,11 @@ export default defineComponent({
       if (e.type == "online") connexionState.value = true
     },
     showLoading () {
-      // hiding in 1.500s
+      // hiding
       setTimeout(() => {
+        document.querySelector('html').classList.remove('animateBackground')
         this.show = true
-      }, 1500)
+      }, 5500)
     }
   },
   watch: {
@@ -101,7 +101,7 @@ export default defineComponent({
     // hiding in 1.500s
     setTimeout(() => {
       this.$q.loading.hide()
-    }, 1500)
+    }, 5500)
   },
   computed: {
   },

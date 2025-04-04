@@ -177,12 +177,12 @@
             </q-item-section>
 
             <q-item-section>
-              Demandes de service
+              Demandes de prestation
             </q-item-section>
 
           </q-item>
 
-          <q-item clickable v-ripple v-if="user.user_type === 1">
+          <q-item clickable v-ripple v-if="user.user_type === 3">
 
             <q-item-section avatar>
               <q-icon name="event_note" />
@@ -194,8 +194,8 @@
 
           </q-item>
 
-          <q-item :active="this.$route.path === '/my-account/inbox'" active-class="text-light-blue-9"
-            @click="this.$router.push('/my-account/inbox')" v-ripple clickable>
+          <q-item v-if="user.user_type >= 2" :active="this.$route.path === '/my-account/inbox'"
+            active-class="text-light-blue-9" @click="this.$router.push('/my-account/inbox')" v-ripple clickable>
 
             <q-item-section avatar>
               <q-icon name="inbox" />
@@ -469,12 +469,13 @@
       <q-toolbar>
 
         <q-item-section style="max-width: 32px;">
-          <q-icon name="notifications" color="light-blue-9" size="md" />
+          <q-icon name="notifications" color="light-blue-9" size="23px" />
         </q-item-section>
 
-        <q-toolbar-title style="text-transform: uppercase; font-weight: 600;">Notifications</q-toolbar-title>
+        <q-toolbar-title
+          style="text-transform: uppercase; font-weight: 600;font-size: 16px;">Notifications</q-toolbar-title>
 
-        <q-btn flat round v-ripple dense icon="done_all" @click="checkNotificationAll" v-close-popup />
+        <q-btn flat round v-ripple dense icon="done_all" size="12px" @click="checkNotificationAll" v-close-popup />
 
       </q-toolbar>
 
